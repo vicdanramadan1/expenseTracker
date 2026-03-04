@@ -9,7 +9,7 @@ lifecycleRuntimeKtx = "2.9.4"
 activityCompose = "1.11.0"
 composeBom = "2026.01.01"
 composeNavigation = "2.7.7"
-daggerHilt = "2.51.1"
+hilt = "2.51.1"
 hiltNavigationCompose = "1.2.0"
 room = "2.8.4"
 firebaseBom = "34.7.0"
@@ -45,8 +45,8 @@ kotlinx-coroutines-core = {group = "org.jetbrains.kotlinx" , name = "kotlinx-cor
 kotlinx-coroutines-android = {group = "org.jetbrains.kotlinx" , name = "kotlinx-coroutines-android" , version.ref = "coroutines" }
 kotlinx-coroutines-test = {group = "org.jetbrains.kotlinx" , name = "kotlinx-coroutines-test" , version.ref = "coroutines" }
 kotlinx-serialization = {group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json" , version.ref = "serialization"}
-dagger-hilt = {group = "com.google.dagger" , name = "hilt-android" , version.ref = "daggerHilt"}
-dagger-hilt-compiler = {group = "com.google.dagger" , name = "hilt-compiler" , version.ref = "daggerHilt"}
+hilt = {group = "com.google.dagger" , name = "hilt-android" , version.ref = "hilt" }
+hilt-compiler = {group = "com.google.dagger" , name = "hilt-compiler" , version.ref = "hilt" }
 firebase-bom = {group = "com.google.firebase" , name = "firebase-bom" , version.ref = "firebaseBom"}
 firebase-firestore = {group = "com.google.firebase" , name = "firebase-firestore" }
 firebase-auth = {group = "com.google.firebase" , name = "firebase-auth" }
@@ -56,7 +56,7 @@ mockk = {group = "io.mockk" , name = "mockk" , version.ref = "mockk"}
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-dagger-hilt = {id = "com.google.dagger.hilt.android" , version.ref = "daggerHilt"}
+dagger-hilt = {id = "com.google.dagger.hilt.android" , version.ref = "hilt" }
 google-services = {id = "com.google.gms.google-services" , version.ref = "googleServices" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp" , version.ref = "ksp"}
