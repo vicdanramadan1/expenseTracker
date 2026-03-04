@@ -2,9 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.dagger.hilt)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.dagger.hilt)
 }
 
 android {
@@ -58,9 +58,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     testImplementation(libs.kotlinx.coroutines.test)
     //HILT
-    implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.dagger.hilt)
-    ksp(libs.dagger.hilt.compiler)
+    implementation(libs.hilt)
+    ksp(libs.hilt.compiler)
     //ROOM
     implementation(libs.androidx.room)
     implementation(libs.androidx.room.ktx)
