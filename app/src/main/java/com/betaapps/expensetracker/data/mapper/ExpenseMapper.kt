@@ -8,7 +8,7 @@ fun Expense.toEntity(): ExpenseEntity = ExpenseEntity(
     amount = this.amount,
     category = this.category,
     description = this.description,
-    date = this.date
+    createdAt = this.createdAt
 )
 
 fun ExpenseEntity.toDomain(): Expense = Expense(
@@ -16,5 +16,5 @@ fun ExpenseEntity.toDomain(): Expense = Expense(
     amount = this.amount,
     category = this.category,
     description = this.description,
-    date = this.date
+    createdAt = this.createdAt
 )
