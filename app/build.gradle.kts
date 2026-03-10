@@ -59,6 +59,7 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     //HILT
     implementation(libs.hilt)
+    implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
     //ROOM
     implementation(libs.androidx.room)
