@@ -1,0 +1,81 @@
+package com.betaapps.expensetracker.presentation.home
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.betaapps.expensetracker.domain.usecases.AddExpensUsecase
+import com.betaapps.expensetracker.domain.usecases.GetExpensesUsecase
+import com.betaapps.expensetracker.presentation.home.mapper.toDomain
+import com.betaapps.expensetracker.presentation.home.mapper.toUiList
+import com.betaapps.expensetracker.presentation.home.model.Expense
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class HomeScreenViewModel @Inject constructor(
+    private val getExpensesUsecase: GetExpensesUsecase,
+    private val addExpensUsecase: AddExpensUsecase,
+) : ViewModel() {
+
+    private val _homeState = MutableStateFlow(HomeState())
+    val homeState: StateFlow<HomeState> = _homeState.asStateFlow()
+
+
+    fun onEvent(event: HomeScreenEvent) {
+        when (event) {
+            HomeScreenEvent.LoadExpenses -> loadExpenses()
+            is HomeScreenEvent.ExpenseTileClicked -> {}
+            is HomeScreenEvent.AddNewExpenseClicked -> {
+                 addExpense(event.expense)
+            }
+        }
+    }
+
+    private fun setExpenses(expenses: List<Expense>) {
+        _homeState.update { current ->
+            current.copy(isLoading = false, error = null, data = expenses)
+        }
+    }
+
+    private fun upsertExpense(expense: Expense) {
+        val currentList = _homeState.value.data.orEmpty()
+        val updated = if (currentList.any { it.id == expense.id }) {
+            currentList.map { if (it.id == expense.id) expense else it }
+        } else {
+            listOf(expense) + currentList
+        }
+
+        _homeState.update { current ->
+            current.copy(isLoading = false, error = "", data = updated)
+        }
+    }
+
+    fun removeExpense(expenseId: String) {
+        val updated = _homeState.value.data.orEmpty()
+            .filterNot { it.id == expenseId }
+
+        _homeState.update { current ->
+            current.copy(isLoading = false, error = "", data = updated)
+        }
+    }
+
+    private fun loadExpenses() {
+        viewModelScope.launch {
+            getExpensesUsecase().onEach { expenses ->  
+                _homeState.value = _homeState.value.copy(data = expenses.toUiList())
+            }
+        }
+    }
+
+    private fun addExpense(expense: Expense)
+    {
+        viewModelScope.launch {
+            addExpensUsecase(expense.toDomain())
+        }
+    }
+}
