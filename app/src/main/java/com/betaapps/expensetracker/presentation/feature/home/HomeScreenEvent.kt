@@ -1,6 +1,6 @@
-package com.betaapps.expensetracker.presentation.home
+package com.betaapps.expensetracker.presentation.feature.home
 
-import com.betaapps.expensetracker.presentation.home.model.Expense
+import com.betaapps.expensetracker.presentation.feature.home.model.Expense
 
 sealed interface HomeScreenEvent {
     data object LoadExpenses : HomeScreenEvent

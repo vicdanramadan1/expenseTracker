@@ -1,4 +1,4 @@
-package com.betaapps.expensetracker.presentation.home
+package com.betaapps.expensetracker.presentation.feature.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,21 +13,23 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.betaapps.expensetracker.presentation.home.components.ExpensesList
+import com.betaapps.expensetracker.presentation.feature.home.components.ExpensesList
+import com.betaapps.expensetracker.presentation.feature.home.model.Expense
 import com.betaapps.expensetracker.ui.theme.ExpenseTrackerTheme
-import com.betaapps.expensetracker.presentation.home.components.ExpensePieChart
-import androidx.compose.runtime.collectAsState
+import com.betaapps.expensetracker.presentation.feature.home.components.ExpensePieChart
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeScreenViewModel = hiltViewModel(),
     onAddExpenseClick: () -> Unit = {},
+    onExpenseClick: (Expense) -> Unit = {}
 ) {
     val expenses = viewModel.homeState.collectAsState().value.data
 
@@ -71,7 +73,9 @@ fun HomeScreen(
                 )
                 TextButton(
                     onClick =
-                        { onAddExpenseClick() },
+                        {
+                            onAddExpenseClick()
+                        },
                     colors = ButtonDefaults.textButtonColors(
                         contentColor = MaterialTheme.colorScheme.primary
                     )
@@ -88,7 +92,8 @@ fun HomeScreen(
                 expenses = expenses,
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                onExpenseClicked = onExpenseClick
             )
         }
     }
@@ -98,6 +103,6 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenPreview() {
     ExpenseTrackerTheme {
-        HomeScreen()
+        HomeScreen(onAddExpenseClick = {})
     }
 }

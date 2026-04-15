@@ -8,8 +8,9 @@ import com.betaapps.expensetracker.data.repository.ExpenseRepositoryImpl
 import com.betaapps.expensetracker.domain.repository.ExpenseRepository
 import com.betaapps.expensetracker.domain.usecases.AddExpensUsecase
 import com.betaapps.expensetracker.domain.usecases.DeleteExpenseUsecase
+import com.betaapps.expensetracker.domain.usecases.GetExpenseUsecase
 import com.betaapps.expensetracker.domain.usecases.GetExpensesUsecase
-import com.betaapps.expensetracker.presentation.home.HomeScreenViewModel
+import com.betaapps.expensetracker.presentation.feature.home.HomeScreenViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -58,11 +59,19 @@ object AppModule {
     }
 
     @Provides
+    fun provideGetExpenseUseCase(repository: ExpenseRepository): GetExpenseUsecase {
+        return GetExpenseUsecase(repository)
+    }
+
+    @Provides
     @Singleton
     fun provideHomeScreenViewModel(
         addExpensUsecase: AddExpensUsecase,
         getExpensesUsecase: GetExpensesUsecase
     ) : HomeScreenViewModel {
-        return HomeScreenViewModel(addExpensUsecase = addExpensUsecase , getExpensesUsecase = getExpensesUsecase)
+        return HomeScreenViewModel(
+            addExpensUsecase = addExpensUsecase,
+            getExpensesUsecase = getExpensesUsecase
+        )
     }
 }

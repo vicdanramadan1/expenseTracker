@@ -1,4 +1,4 @@
-package com.betaapps.expensetracker.presentation.home
+package com.betaapps.expensetracker.presentation.feature.addeditexpense
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -28,11 +28,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -40,35 +35,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.betaapps.expensetracker.presentation.home.model.Expense
-import com.betaapps.expensetracker.presentation.home.model.ExpenseCategory
+import com.betaapps.expensetracker.presentation.feature.home.model.ExpenseCategory
 import com.betaapps.expensetracker.ui.theme.ExpenseTrackerTheme
-import java.util.UUID
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddEditExpenseScreen(
-    expense: Expense?,
-    onSaveExpense: (Expense) -> Unit,
+    state: AddEditExpenseState,
+    onAmountChange: (String) -> Unit,
+    onCategoryExpandedChange: (Boolean) -> Unit,
+    onCategorySelected: (ExpenseCategory) -> Unit,
+    onSubCategoryChange: (String) -> Unit,
+    onDateChange: (String) -> Unit,
+    onSaveClick: () -> Unit,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val isEditMode = expense != null
-
-    var amount by rememberSaveable(expense?.id) {
-        mutableStateOf(expense?.amount?.toString().orEmpty())
-    }
-    var selectedCategory by rememberSaveable(expense?.id) {
-        mutableStateOf(expense?.category ?: ExpenseCategory.OTHER)
-    }
-    var subCategory by rememberSaveable(expense?.id) {
-        mutableStateOf(expense?.subCategory.orEmpty())
-    }
-    var date by rememberSaveable(expense?.id) {
-        mutableStateOf(expense?.date.orEmpty())
-    }
-
-    var categoryExpanded by remember { mutableStateOf(false) }
+    val isEditMode = state.expenseId != null
 
     val cardShape = RoundedCornerShape(18.dp)
     val cardBorder = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
@@ -131,8 +114,8 @@ fun AddEditExpenseScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     OutlinedTextField(
-                        value = amount,
-                        onValueChange = { amount = it },
+                        value = state.amountInput,
+                        onValueChange = onAmountChange,
                         label = { Text("Amount") },
                         placeholder = { Text("0.00") },
                         singleLine = true,
@@ -140,17 +123,17 @@ fun AddEditExpenseScreen(
                     )
 
                     ExposedDropdownMenuBox(
-                        expanded = categoryExpanded,
-                        onExpandedChange = { categoryExpanded = !categoryExpanded }
+                        expanded = state.isCategoryExpanded,
+                        onExpandedChange = onCategoryExpandedChange
                     ) {
                         OutlinedTextField(
-                            value = selectedCategory.label,
+                            value = state.selectedCategory.label,
                             onValueChange = {},
                             readOnly = true,
                             label = { Text("Category") },
                             trailingIcon = {
                                 ExposedDropdownMenuDefaults.TrailingIcon(
-                                    expanded = categoryExpanded
+                                    expanded = state.isCategoryExpanded
                                 )
                             },
                             modifier = Modifier
@@ -159,8 +142,8 @@ fun AddEditExpenseScreen(
                         )
 
                         ExposedDropdownMenu(
-                            expanded = categoryExpanded,
-                            onDismissRequest = { categoryExpanded = false }
+                            expanded = state.isCategoryExpanded,
+                            onDismissRequest = { onCategoryExpandedChange(false) }
                         ) {
                             ExpenseCategory.entries.forEach { category ->
                                 DropdownMenuItem(
@@ -171,8 +154,7 @@ fun AddEditExpenseScreen(
                                         )
                                     },
                                     onClick = {
-                                        selectedCategory = category
-                                        categoryExpanded = false
+                                        onCategorySelected(category)
                                     }
                                 )
                             }
@@ -180,16 +162,16 @@ fun AddEditExpenseScreen(
                     }
 
                     OutlinedTextField(
-                        value = subCategory,
-                        onValueChange = { subCategory = it },
+                        value = state.subCategory,
+                        onValueChange = onSubCategoryChange,
                         label = { Text("Subcategory") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
 
                     OutlinedTextField(
-                        value = date,
-                        onValueChange = { date = it },
+                        value = state.date,
+                        onValueChange = onDateChange,
                         label = { Text("Date") },
                         placeholder = { Text("9 Mar 2026") },
                         singleLine = true,
@@ -198,21 +180,10 @@ fun AddEditExpenseScreen(
                 }
             }
 
-            val parsedAmount = amount.toDoubleOrNull() ?: 0.0
-            val canSave = subCategory.isNotBlank() && date.isNotBlank()
+            val canSave = state.subCategory.isNotBlank() && state.date.isNotBlank()
 
             Button(
-                onClick = {
-                    onSaveExpense(
-                        Expense(
-                            id = expense?.id ?: UUID.randomUUID().toString(),
-                            category = selectedCategory,
-                            subCategory = subCategory.trim(),
-                            amount = parsedAmount,
-                            date = date.trim()
-                        )
-                    )
-                },
+                onClick = onSaveClick,
                 enabled = canSave,
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(14.dp),
@@ -256,8 +227,13 @@ private fun CategoryItem(
 private fun AddExpenseScreenPreview() {
     ExpenseTrackerTheme {
         AddEditExpenseScreen(
-            expense = null,
-            onSaveExpense = {},
+            state = AddEditExpenseState(),
+            onAmountChange = {},
+            onCategoryExpandedChange = {},
+            onCategorySelected = {},
+            onSubCategoryChange = {},
+            onDateChange = {},
+            onSaveClick = {},
             onBackClick = {}
         )
     }
@@ -268,14 +244,19 @@ private fun AddExpenseScreenPreview() {
 private fun EditExpenseScreenPreview() {
     ExpenseTrackerTheme {
         AddEditExpenseScreen(
-            expense = Expense(
-                id = "1",
-                category = ExpenseCategory.TRANSPORT,
+            state = AddEditExpenseState(
+                expenseId = "1",
+                selectedCategory = ExpenseCategory.TRANSPORT,
                 subCategory = "Taxi",
-                amount = 32.0,
+                amountInput = "32.0",
                 date = "8 Mar 2026"
             ),
-            onSaveExpense = {},
+            onAmountChange = {},
+            onCategoryExpandedChange = {},
+            onCategorySelected = {},
+            onSubCategoryChange = {},
+            onDateChange = {},
+            onSaveClick = {},
             onBackClick = {}
         )
     }

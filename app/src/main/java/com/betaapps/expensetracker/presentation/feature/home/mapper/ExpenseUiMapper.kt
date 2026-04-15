@@ -1,8 +1,8 @@
-package com.betaapps.expensetracker.presentation.home.mapper
+package com.betaapps.expensetracker.presentation.feature.home.mapper
 
 import com.betaapps.expensetracker.domain.model.Expense as DomainExpense
-import com.betaapps.expensetracker.presentation.home.model.Expense as UiExpense
-import com.betaapps.expensetracker.presentation.home.model.ExpenseCategory
+import com.betaapps.expensetracker.presentation.feature.home.model.Expense as UiExpense
+import com.betaapps.expensetracker.presentation.feature.home.model.ExpenseCategory
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
