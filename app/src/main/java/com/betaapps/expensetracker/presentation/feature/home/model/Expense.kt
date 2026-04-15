@@ -1,4 +1,4 @@
-package com.betaapps.expensetracker.presentation.home.model
+package com.betaapps.expensetracker.presentation.feature.home.model
 
 data class Expense(
     val id: String,

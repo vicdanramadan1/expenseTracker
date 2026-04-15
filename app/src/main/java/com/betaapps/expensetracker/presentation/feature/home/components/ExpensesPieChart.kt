@@ -1,4 +1,4 @@
-package com.betaapps.expensetracker.presentation.home.components
+package com.betaapps.expensetracker.presentation.feature.home.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
@@ -27,8 +27,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.betaapps.expensetracker.presentation.home.model.Expense
-import com.betaapps.expensetracker.presentation.home.model.ExpenseCategory
+import com.betaapps.expensetracker.presentation.feature.home.model.Expense
+import com.betaapps.expensetracker.presentation.feature.home.model.ExpenseCategory
 
 @Composable
 fun ExpensePieChart(

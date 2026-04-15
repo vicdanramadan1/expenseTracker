@@ -1,4 +1,4 @@
-package com.betaapps.expensetracker.presentation.home.model
+package com.betaapps.expensetracker.presentation.feature.home.model
 
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color

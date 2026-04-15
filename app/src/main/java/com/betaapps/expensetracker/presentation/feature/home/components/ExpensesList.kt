@@ -1,4 +1,4 @@
-package com.betaapps.expensetracker.presentation.home.components
+package com.betaapps.expensetracker.presentation.feature.home.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,13 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.betaapps.expensetracker.presentation.home.model.Expense
-import com.betaapps.expensetracker.presentation.home.model.ExpenseCategory
+import com.betaapps.expensetracker.presentation.feature.home.model.Expense
+import com.betaapps.expensetracker.presentation.feature.home.model.ExpenseCategory
 
 @Composable
 fun ExpensesList(
     expenses: List<Expense>?,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onExpenseClicked: (Expense) -> Unit = {}
 ) {
     val listState = rememberLazyListState()
     val firstVisibleIndex by remember { derivedStateOf { listState.firstVisibleItemIndex } }
@@ -46,8 +47,8 @@ fun ExpensesList(
             ExpenseTile(
                 expense = expense,
                 modifier = Modifier.graphicsLayer(alpha = alpha),
-                onClick = { clicked ->
-                    // open expense details
+                onClick = {
+                    onExpenseClicked(expense)
                 }
             )
         }
@@ -80,6 +81,7 @@ private fun ExpensesListPreview() {
                 date = "20 Apr 2025",
                 subCategory = ""
             )
-        )
+        ),
+        onExpenseClicked = {}
     )
 }
