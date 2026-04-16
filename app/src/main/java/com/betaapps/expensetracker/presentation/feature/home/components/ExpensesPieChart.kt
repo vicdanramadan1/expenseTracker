@@ -24,9 +24,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.annotation.StringRes
+import com.betaapps.expensetracker.R
 import com.betaapps.expensetracker.presentation.feature.home.model.Expense
 import com.betaapps.expensetracker.presentation.feature.home.model.ExpenseCategory
 
@@ -49,7 +52,7 @@ fun ExpensePieChart(
                 .height(220.dp),
             contentAlignment = Alignment.Center
         ) {
-            Text("No expenses yet")
+            Text(stringResource(R.string.expenses_no_items))
         }
         return
     }
@@ -114,12 +117,12 @@ private fun PieCanvas(
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = "Total",
+                text = stringResource(R.string.expenses_total_label),
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.Gray
             )
             Text(
-                text = "$${"%.2f".format(total)}",
+                text = stringResource(R.string.currency_amount, total),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
@@ -144,7 +147,11 @@ private fun LegendList(
                         .background(slice.color, CircleShape)
                 )
                 Text(
-                    text = "${slice.label}: $${"%.2f".format(slice.amount)}",
+                    text = stringResource(
+                        R.string.legend_item,
+                        stringResource(slice.labelRes),
+                        slice.amount
+                    ),
                     style = MaterialTheme.typography.bodyMedium,
                     color = mutedTextColor
                 )
@@ -165,7 +172,7 @@ private fun buildSlices(expenses: List<Expense>?): List<PieSlice> {
     return totalsByCategory
         .map { (category, totalAmount) ->
             PieSlice(
-                label = category.label,
+                labelRes = category.labelRes,
                 amount = totalAmount.toFloat(),
                 color = category.color
             )
@@ -174,7 +181,7 @@ private fun buildSlices(expenses: List<Expense>?): List<PieSlice> {
 }
 
 private data class PieSlice(
-    val label: String,
+    @StringRes val labelRes: Int,
     val amount: Float,
     val color: Color
 )

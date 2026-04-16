@@ -1,3 +1,47 @@
 <resources>
     <string name="app_name">expenseTracker</string>
+    <string name="unknown_destination">Unknown destination</string>
+
+    <string name="action_ok">OK</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_pick">Pick</string>
+    <string name="action_close">Close</string>
+
+    <string name="add_edit_title_add">Add Expense</string>
+    <string name="add_edit_title_edit">Edit Expense</string>
+    <string name="add_edit_subtitle_add">Track a new spending entry</string>
+    <string name="add_edit_subtitle_edit">Update your expense details</string>
+    <string name="add_edit_amount_label">Amount</string>
+    <string name="add_edit_amount_placeholder">0.00</string>
+    <string name="add_edit_category_label">Category</string>
+    <string name="add_edit_subcategory_optional_label">Subcategory (optional)</string>
+    <string name="add_edit_date_label">Date</string>
+    <string name="add_edit_date_placeholder">Pick from calendar</string>
+    <string name="add_edit_button_saving">Saving...</string>
+    <string name="add_edit_button_save_changes">Save Changes</string>
+    <string name="add_edit_button_add_expense">Add Expense</string>
+
+    <string name="home_title">Expense Overview</string>
+    <string name="home_subtitle">Track your spending by category</string>
+    <string name="home_recent_expenses">Recent Expenses</string>
+    <string name="home_add_expense_button">+ Add</string>
+
+    <string name="expenses_no_details">No details</string>
+    <string name="expenses_no_items">No expenses yet</string>
+    <string name="expenses_total_label">Total</string>
+    <string name="expenses_delete_content_description">Delete expense</string>
+
+    <string name="currency_amount">$%1$.2f</string>
+    <string name="legend_item">%1$s: $%2$.2f</string>
+
+    <string name="category_food">Food</string>
+    <string name="category_transport">Transport</string>
+    <string name="category_entertainment">Entertainment</string>
+    <string name="category_housing">Housing</string>
+    <string name="category_bills">Bills</string>
+    <string name="category_health">Health</string>
+    <string name="category_shopping">Shopping</string>
+    <string name="category_education">Education</string>
+    <string name="category_travel">Travel</string>
+    <string name="category_other">Other</string>
 </resources>

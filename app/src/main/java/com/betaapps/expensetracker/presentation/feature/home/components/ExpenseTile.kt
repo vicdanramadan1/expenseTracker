@@ -24,11 +24,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.betaapps.expensetracker.R
 import com.betaapps.expensetracker.presentation.feature.home.model.Expense
 import com.betaapps.expensetracker.presentation.feature.home.model.ExpenseCategory
 
@@ -70,7 +72,7 @@ fun ExpenseTile(
             ) {
                 Icon(
                     painter = painterResource(category.iconRes),
-                    contentDescription = category.label,
+                    contentDescription = stringResource(category.labelRes),
                     tint = category.color
                 )
             }
@@ -79,11 +81,11 @@ fun ExpenseTile(
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = category.label,
+                    text = stringResource(category.labelRes),
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = expense.subCategory.ifBlank { "No details" },
+                    text = expense.subCategory.ifBlank { stringResource(R.string.expenses_no_details) },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
@@ -97,7 +99,7 @@ fun ExpenseTile(
                     color = category.color.copy(alpha = 0.13f)
                 ) {
                     Text(
-                        text = "$${"%.2f".format(expense.amount)}",
+                        text = stringResource(R.string.currency_amount, expense.amount),
                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.Bold,
