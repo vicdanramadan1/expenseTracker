@@ -93,7 +93,8 @@ fun HomeScreen(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
-                onExpenseClicked = onExpenseClick
+                onExpenseClicked = onExpenseClick,
+                onExpenseSwipedToDelete = viewModel::removeExpense
             )
         }
     }
