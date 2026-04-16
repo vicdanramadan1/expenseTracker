@@ -28,6 +28,7 @@ fun ExpenseNavHost(
     modifier: Modifier = Modifier
 ) {
     val backStack = rememberNavBackStack(ExpenseDestination.Home)
+    val popIfPossible = { if (backStack.size > 1) backStack.removeAt(backStack.lastIndex) }
 
     NavDisplay(
         modifier = modifier,
@@ -38,7 +39,7 @@ fun ExpenseNavHost(
         ),
         onBack = {
             if (backStack.size > 1) {
-                backStack.removeAt(backStack.lastIndex)
+               popIfPossible()
             }
         },
         entryProvider = entryProvider(
@@ -58,7 +59,7 @@ fun ExpenseNavHost(
                 AddEditExpenseRoute(
                     expenseId = destination.expenseId,
                     onSaveDone = { backStack.removeAt(backStack.lastIndex) },
-                    onBackClick = { backStack.removeAt(backStack.lastIndex) }
+                    onBackClick = {  popIfPossible() }
                 )
             }
         }
