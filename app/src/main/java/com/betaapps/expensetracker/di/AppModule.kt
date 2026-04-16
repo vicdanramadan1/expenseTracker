@@ -62,18 +62,4 @@ object AppModule {
     fun provideGetExpenseUseCase(repository: ExpenseRepository): GetExpenseUsecase {
         return GetExpenseUsecase(repository)
     }
-
-    @Provides
-    @Singleton
-    fun provideHomeScreenViewModel(
-        addExpensUsecase: AddExpensUsecase,
-        getExpensesUsecase: GetExpensesUsecase,
-        deleteExpenseUsecase: DeleteExpenseUsecase
-    ) : HomeScreenViewModel {
-        return HomeScreenViewModel(
-            addExpensUsecase = addExpensUsecase,
-            getExpensesUsecase = getExpensesUsecase,
-            deleteExpenseUsecase = deleteExpenseUsecase
-        )
-    }
 }
