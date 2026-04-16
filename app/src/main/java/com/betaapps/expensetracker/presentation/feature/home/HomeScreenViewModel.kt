@@ -9,6 +9,7 @@ import com.betaapps.expensetracker.presentation.feature.home.mapper.toDomain
 import com.betaapps.expensetracker.presentation.feature.home.mapper.toUiList
 import com.betaapps.expensetracker.presentation.feature.home.model.Expense
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,7 +27,7 @@ class HomeScreenViewModel @Inject constructor(
 
     private val _homeState = MutableStateFlow(HomeState())
     val homeState: StateFlow<HomeState> = _homeState.asStateFlow()
-
+    private var loadJob: Job? = null
     init {
         loadExpenses()
     }
@@ -67,13 +68,10 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     private fun loadExpenses() {
-        viewModelScope.launch {
+        loadJob?.cancel()
+        loadJob = viewModelScope.launch {
             getExpensesUsecase().collect { expenses ->
-                _homeState.value = _homeState.value.copy(
-                    isLoading = false,
-                    error = null,
-                    data = expenses.toUiList()
-                )
+                _homeState.update { it.copy(isLoading = false, error = null, data = expenses.toUiList()) }
             }
         }
     }
