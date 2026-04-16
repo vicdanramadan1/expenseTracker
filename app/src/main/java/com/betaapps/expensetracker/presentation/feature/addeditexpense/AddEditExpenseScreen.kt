@@ -43,11 +43,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.betaapps.expensetracker.R
 import com.betaapps.expensetracker.presentation.feature.home.model.ExpenseCategory
 import com.betaapps.expensetracker.ui.theme.ExpenseTrackerTheme
 import java.text.SimpleDateFormat
@@ -98,12 +100,12 @@ fun AddEditExpenseScreen(
                         }
                     }
                 ) {
-                    Text("OK")
+                    Text(stringResource(R.string.action_ok))
                 }
             },
             dismissButton = {
                 TextButton(onClick = onDatePickerDismiss) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.action_cancel))
                 }
             }
         ) {
@@ -130,23 +132,23 @@ fun AddEditExpenseScreen(
             ) {
                 Column {
                     Text(
-                        text = if (isEditMode) "Edit Expense" else "Add Expense",
+                        text = stringResource(
+                            if (isEditMode) R.string.add_edit_title_edit else R.string.add_edit_title_add
+                        ),
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = if (isEditMode) {
-                            "Update your expense details"
-                        } else {
-                            "Track a new spending entry"
-                        },
+                        text = stringResource(
+                            if (isEditMode) R.string.add_edit_subtitle_edit else R.string.add_edit_subtitle_add
+                        ),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
                 TextButton(onClick = onBackClick) {
-                    Text("Close")
+                    Text(stringResource(R.string.action_close))
                 }
             }
 
@@ -172,8 +174,8 @@ fun AddEditExpenseScreen(
                     OutlinedTextField(
                         value = state.amountInput,
                         onValueChange = onAmountChange,
-                        label = { Text("Amount") },
-                        placeholder = { Text("0.00") },
+                        label = { Text(stringResource(R.string.add_edit_amount_label)) },
+                        placeholder = { Text(stringResource(R.string.add_edit_amount_placeholder)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                         keyboardOptions = KeyboardOptions(
@@ -187,10 +189,10 @@ fun AddEditExpenseScreen(
                         onExpandedChange = onCategoryExpandedChange
                     ) {
                         OutlinedTextField(
-                            value = state.selectedCategory.label,
+                            value = stringResource(state.selectedCategory.labelRes),
                             onValueChange = {},
                             readOnly = true,
-                            label = { Text("Category") },
+                            label = { Text(stringResource(R.string.add_edit_category_label)) },
                             trailingIcon = {
                                 ExposedDropdownMenuDefaults.TrailingIcon(
                                     expanded = state.isCategoryExpanded
@@ -210,7 +212,7 @@ fun AddEditExpenseScreen(
                                     text = {
                                         CategoryItem(
                                             color = category.color,
-                                            label = category.label
+                                            label = stringResource(category.labelRes)
                                         )
                                     },
                                     onClick = {
@@ -224,7 +226,7 @@ fun AddEditExpenseScreen(
                     OutlinedTextField(
                         value = state.subCategory,
                         onValueChange = onSubCategoryChange,
-                        label = { Text("Subcategory (optional)") },
+                        label = { Text(stringResource(R.string.add_edit_subcategory_optional_label)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                         keyboardOptions = KeyboardOptions(
@@ -237,11 +239,11 @@ fun AddEditExpenseScreen(
                         value = dateText,
                         onValueChange = {},
                         readOnly = true,
-                        label = { Text("Date") },
-                        placeholder = { Text("Pick from calendar") },
+                        label = { Text(stringResource(R.string.add_edit_date_label)) },
+                        placeholder = { Text(stringResource(R.string.add_edit_date_placeholder)) },
                         trailingIcon = {
                             TextButton(onClick = onDateFieldClick) {
-                                Text("Pick")
+                                Text(stringResource(R.string.action_pick))
                             }
                         },
                         singleLine = true,
@@ -264,9 +266,9 @@ fun AddEditExpenseScreen(
             ) {
                 Text(
                     text = when {
-                        state.isSaving -> "Saving..."
-                        isEditMode -> "Save Changes"
-                        else -> "Add Expense"
+                        state.isSaving -> stringResource(R.string.add_edit_button_saving)
+                        isEditMode -> stringResource(R.string.add_edit_button_save_changes)
+                        else -> stringResource(R.string.add_edit_button_add_expense)
                     },
                     fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(vertical = 4.dp)

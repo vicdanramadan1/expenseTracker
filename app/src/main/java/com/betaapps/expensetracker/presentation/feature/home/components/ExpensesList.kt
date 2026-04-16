@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
+import com.betaapps.expensetracker.R
 import com.betaapps.expensetracker.presentation.feature.home.model.Expense
 import com.betaapps.expensetracker.presentation.feature.home.model.ExpenseCategory
 
@@ -81,7 +83,7 @@ fun ExpensesList(
                     ) {
                         Icon(
                             painter = painterResource(android.R.drawable.ic_menu_delete),
-                            contentDescription = "Delete expense",
+                            contentDescription = stringResource(R.string.expenses_delete_content_description),
                             tint = Color.White
                         )
                     }
