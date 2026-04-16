@@ -67,11 +67,13 @@ object AppModule {
     @Singleton
     fun provideHomeScreenViewModel(
         addExpensUsecase: AddExpensUsecase,
-        getExpensesUsecase: GetExpensesUsecase
+        getExpensesUsecase: GetExpensesUsecase,
+        deleteExpenseUsecase: DeleteExpenseUsecase
     ) : HomeScreenViewModel {
         return HomeScreenViewModel(
             addExpensUsecase = addExpensUsecase,
-            getExpensesUsecase = getExpensesUsecase
+            getExpensesUsecase = getExpensesUsecase,
+            deleteExpenseUsecase = deleteExpenseUsecase
         )
     }
 }

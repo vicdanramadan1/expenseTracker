@@ -39,7 +39,6 @@ fun ExpenseTile(
     onClick: (Expense) -> Unit = {}
 ) {
     val category = expense.category
-    val cardShape = RoundedCornerShape(18.dp)
 
     Card(
         onClick = { onClick(expense) },
@@ -47,11 +46,11 @@ fun ExpenseTile(
             .fillMaxWidth()
             .shadow(
                 elevation = 10.dp,
-                shape = cardShape,
+                shape =  RoundedCornerShape(18.dp),
                 ambientColor = MaterialTheme.colorScheme.scrim,
                 spotColor = MaterialTheme.colorScheme.scrim
             ),
-        shape = cardShape,
+        shape =  RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
     ) {

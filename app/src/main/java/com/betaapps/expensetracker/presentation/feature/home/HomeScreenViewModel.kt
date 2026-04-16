@@ -3,6 +3,7 @@ package com.betaapps.expensetracker.presentation.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.betaapps.expensetracker.domain.usecases.AddExpensUsecase
+import com.betaapps.expensetracker.domain.usecases.DeleteExpenseUsecase
 import com.betaapps.expensetracker.domain.usecases.GetExpensesUsecase
 import com.betaapps.expensetracker.presentation.feature.home.mapper.toDomain
 import com.betaapps.expensetracker.presentation.feature.home.mapper.toUiList
@@ -20,6 +21,7 @@ import javax.inject.Inject
 class HomeScreenViewModel @Inject constructor(
     private val getExpensesUsecase: GetExpensesUsecase,
     private val addExpensUsecase: AddExpensUsecase,
+    private val deleteExpenseUsecase: DeleteExpenseUsecase,
 ) : ViewModel() {
 
     private val _homeState = MutableStateFlow(HomeState())
@@ -58,12 +60,9 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-    fun removeExpense(expenseId: String) {
-        val updated = _homeState.value.data.orEmpty()
-            .filterNot { it.id == expenseId }
-
-        _homeState.update { current ->
-            current.copy(isLoading = false, error = "", data = updated)
+    fun removeExpense(expense: Expense) {
+        viewModelScope.launch {
+            deleteExpenseUsecase(expense.toDomain())
         }
     }
 
