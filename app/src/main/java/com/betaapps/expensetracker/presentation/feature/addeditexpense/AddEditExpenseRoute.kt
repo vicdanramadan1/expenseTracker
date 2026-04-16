@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.flow.collect
 
 @Composable
 fun AddEditExpenseRoute(
@@ -17,6 +18,13 @@ fun AddEditExpenseRoute(
     LaunchedEffect(expenseId) {
         viewModel.loadExpense(expenseId)
     }
+    LaunchedEffect(viewModel) {
+        viewModel.uiEvents.collect { event ->
+            when (event) {
+                AddEditExpenseUiEvent.SaveSuccess -> onSaveDone()
+            }
+        }
+    }
 
     AddEditExpenseScreen(
         state = state,
@@ -24,11 +32,10 @@ fun AddEditExpenseRoute(
         onCategoryExpandedChange = viewModel::onCategoryExpandedChange,
         onCategorySelected = viewModel::onCategorySelected,
         onSubCategoryChange = viewModel::onSubCategoryChange,
-        onDateChange = viewModel::onDateChange,
-        onSaveClick = {
-            viewModel.saveExpense()
-            onSaveDone()
-        },
+        onDateFieldClick = viewModel::onDateFieldClick,
+        onDatePickerDismiss = viewModel::onDatePickerDismiss,
+        onDateSelected = viewModel::onDateSelected,
+        onSaveClick = viewModel::saveExpense,
         onBackClick = onBackClick,
     )
 }
