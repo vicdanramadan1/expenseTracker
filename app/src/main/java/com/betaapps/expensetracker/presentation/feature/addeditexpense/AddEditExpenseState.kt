@@ -7,6 +7,8 @@ data class AddEditExpenseState(
     val amountInput: String = "",
     val selectedCategory: ExpenseCategory = ExpenseCategory.OTHER,
     val subCategory: String = "",
-    val date: String = "",
-    val isCategoryExpanded: Boolean = false
+    val isCategoryExpanded: Boolean = false,
+    val selectedDateMillis: Long? = null,
+    val isDatePickerVisible: Boolean = false,
+    val isSaving: Boolean = false
 )
