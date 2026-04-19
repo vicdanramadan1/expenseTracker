@@ -5,5 +5,6 @@ import com.betaapps.expensetracker.presentation.feature.home.model.Expense
 data class HomeState(
     val data: List<Expense>? = emptyList(),
     val isLoading: Boolean = false,
-    val error : String? = null
+    val error : String? = null,
+    val searchQuery: String = ""
 )

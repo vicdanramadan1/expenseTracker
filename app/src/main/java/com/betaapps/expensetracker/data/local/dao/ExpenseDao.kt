@@ -5,9 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import com.betaapps.expensetracker.data.local.entity.ExpenseEntity
-import com.betaapps.expensetracker.domain.model.Expense
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -20,7 +18,17 @@ interface ExpenseDao {
     suspend fun deleteExpense(expense: ExpenseEntity)
 
     @Query("SELECT * FROM expenses ORDER BY createdAt DESC")
-     fun getExpenses(): Flow<List<ExpenseEntity>>
+    fun getExpenses(): Flow<List<ExpenseEntity>>
+
+    @Query(
+        """
+        SELECT * FROM expenses
+        WHERE LOWER(category) LIKE '%' || LOWER(:query) || '%'
+            OR LOWER(COALESCE(description, '')) LIKE '%' || LOWER(:query) || '%'
+        ORDER BY createdAt DESC
+        """
+    )
+    fun searchExpenses(query: String): Flow<List<ExpenseEntity>>
 
     @Query("SELECT * FROM expenses WHERE id = :id")
     suspend fun getExpenseById(id: Long): ExpenseEntity?

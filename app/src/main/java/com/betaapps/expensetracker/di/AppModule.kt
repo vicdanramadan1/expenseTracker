@@ -10,7 +10,7 @@ import com.betaapps.expensetracker.domain.usecases.AddExpensUsecase
 import com.betaapps.expensetracker.domain.usecases.DeleteExpenseUsecase
 import com.betaapps.expensetracker.domain.usecases.GetExpenseUsecase
 import com.betaapps.expensetracker.domain.usecases.GetExpensesUsecase
-import com.betaapps.expensetracker.presentation.feature.home.HomeScreenViewModel
+import com.betaapps.expensetracker.domain.usecases.SearchExpensesUsecase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -61,5 +61,10 @@ object AppModule {
     @Provides
     fun provideGetExpenseUseCase(repository: ExpenseRepository): GetExpenseUsecase {
         return GetExpenseUsecase(repository)
+    }
+
+    @Provides
+    fun provideSearchExpensesUseCase(repository: ExpenseRepository): SearchExpensesUsecase {
+        return SearchExpensesUsecase(repository)
     }
 }
