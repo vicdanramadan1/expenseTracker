@@ -7,6 +7,8 @@ interface ExpenseRepository {
 
     suspend fun getExpenses(): Flow<List<Expense>>
 
+    suspend fun searchExpenses(query: String): Flow<List<Expense>>
+
     suspend fun getExpense(id: Long): Expense?
 
     suspend fun addExpense(expense: Expense)

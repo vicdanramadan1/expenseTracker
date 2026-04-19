@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.betaapps.expensetracker.domain.usecases.AddExpensUsecase
 import com.betaapps.expensetracker.domain.usecases.DeleteExpenseUsecase
 import com.betaapps.expensetracker.domain.usecases.GetExpensesUsecase
+import com.betaapps.expensetracker.domain.usecases.SearchExpensesUsecase
 import com.betaapps.expensetracker.presentation.feature.home.mapper.toDomain
 import com.betaapps.expensetracker.presentation.feature.home.mapper.toUiList
 import com.betaapps.expensetracker.presentation.feature.home.model.Expense
@@ -13,7 +14,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,6 +23,7 @@ class HomeScreenViewModel @Inject constructor(
     private val getExpensesUsecase: GetExpensesUsecase,
     private val addExpensUsecase: AddExpensUsecase,
     private val deleteExpenseUsecase: DeleteExpenseUsecase,
+    private val searchExpensesUsecase: SearchExpensesUsecase,
 ) : ViewModel() {
 
     private val _homeState = MutableStateFlow(HomeState())
@@ -38,6 +39,7 @@ class HomeScreenViewModel @Inject constructor(
             is HomeScreenEvent.ExpenseTileClicked -> {}
             is HomeScreenEvent.AddNewExpenseClicked -> {
                  addExpense(event.expense)
+
             }
         }
     }
@@ -67,8 +69,29 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
+    fun onSearchQueryChange(query: String) {
+        val normalizedQuery = query.trim()
+        _homeState.update { it.copy(searchQuery = query) }
+
+        if (normalizedQuery.isBlank()) {
+            loadExpenses()
+            return
+        }
+
+        loadJob?.cancel()
+        _homeState.update { it.copy(isLoading = true, error = null, data = emptyList()) }
+        loadJob = viewModelScope.launch {
+            searchExpensesUsecase(normalizedQuery).collect { expenses ->
+                _homeState.update {
+                    it.copy(isLoading = false, error = null, data = expenses.toUiList())
+                }
+            }
+        }
+    }
+
     private fun loadExpenses() {
         loadJob?.cancel()
+        _homeState.update { it.copy(isLoading = true, error = null) }
         loadJob = viewModelScope.launch {
             getExpensesUsecase().collect { expenses ->
                 _homeState.update { it.copy(isLoading = false, error = null, data = expenses.toUiList()) }

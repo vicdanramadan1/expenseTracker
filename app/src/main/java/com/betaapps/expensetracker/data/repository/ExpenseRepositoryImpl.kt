@@ -13,6 +13,9 @@ class ExpenseRepositoryImpl(private val expenseDao: ExpenseDao) : ExpenseReposit
     override suspend fun getExpenses(): Flow<List<Expense>> =
         expenseDao.getExpenses().map { it.map(ExpenseEntity::toDomain) }
 
+    override suspend fun searchExpenses(query: String): Flow<List<Expense>> =
+        expenseDao.searchExpenses(query).map { it.map(ExpenseEntity::toDomain) }
+
     override suspend fun getExpense(id: Long): Expense? =
         expenseDao.getExpenseById(id)?.toDomain()
 

@@ -14,12 +14,16 @@ import androidx.navigation3.ui.NavDisplay
 import com.betaapps.expensetracker.R
 import com.betaapps.expensetracker.presentation.feature.addeditexpense.AddEditExpenseRoute
 import com.betaapps.expensetracker.presentation.feature.home.HomeScreen
+import com.betaapps.expensetracker.presentation.feature.search.SearchExpensesRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface ExpenseDestination : NavKey {
     @Serializable
     data object Home : ExpenseDestination
+
+    @Serializable
+    data object Search : ExpenseDestination
 
     @Serializable
     data class AddEdit(val expenseId: String? = null) : ExpenseDestination
@@ -52,6 +56,15 @@ fun ExpenseNavHost(
             entry<ExpenseDestination.Home> {
                 HomeScreen(
                     onAddExpenseClick = { backStack.add(ExpenseDestination.AddEdit()) },
+                    onSearchClick = { backStack.add(ExpenseDestination.Search) },
+                    onExpenseClick = { expense ->
+                        backStack.add(ExpenseDestination.AddEdit(expenseId = expense.id))
+                    }
+                )
+            }
+            entry<ExpenseDestination.Search> {
+                SearchExpensesRoute(
+                    onBackClick = { popIfPossible() },
                     onExpenseClick = { expense ->
                         backStack.add(ExpenseDestination.AddEdit(expenseId = expense.id))
                     }

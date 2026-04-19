@@ -25,6 +25,13 @@
     <string name="home_subtitle">Track your spending by category</string>
     <string name="home_recent_expenses">Recent Expenses</string>
     <string name="home_add_expense_button">+ Add</string>
+    <string name="home_search_open_button">Search expenses</string>
+    <string name="home_search_label">Search</string>
+    <string name="home_search_placeholder">Category or subcategory</string>
+    <string name="home_search_no_results">No result found</string>
+    <string name="search_title">Search Expenses</string>
+    <string name="search_subtitle">Find by category or subcategory</string>
+    <string name="search_empty_state">Type to search your expenses</string>
 
     <string name="expenses_no_details">No details</string>
     <string name="expenses_no_items">No expenses yet</string>
