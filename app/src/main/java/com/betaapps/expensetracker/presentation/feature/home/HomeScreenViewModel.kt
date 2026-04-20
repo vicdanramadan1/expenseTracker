@@ -2,7 +2,7 @@ package com.betaapps.expensetracker.presentation.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.betaapps.expensetracker.domain.usecases.AddExpensUsecase
+import com.betaapps.expensetracker.domain.usecases.AddExpenseUsecase
 import com.betaapps.expensetracker.domain.usecases.DeleteExpenseUsecase
 import com.betaapps.expensetracker.domain.usecases.GetExpensesUsecase
 import com.betaapps.expensetracker.domain.usecases.SearchExpensesUsecase
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
     private val getExpensesUsecase: GetExpensesUsecase,
-    private val addExpensUsecase: AddExpensUsecase,
+    private val addExpenseUsecase: AddExpenseUsecase,
     private val deleteExpenseUsecase: DeleteExpenseUsecase,
     private val searchExpensesUsecase: SearchExpensesUsecase,
 ) : ViewModel() {
@@ -101,7 +101,7 @@ class HomeScreenViewModel @Inject constructor(
 
     fun addExpense(expense: Expense) {
         viewModelScope.launch {
-            addExpensUsecase(expense.toDomain())
+            addExpenseUsecase(expense.toDomain())
         }
     }
 }

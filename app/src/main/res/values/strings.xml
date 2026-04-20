@@ -22,6 +22,9 @@
     <string name="add_edit_button_add_expense">Add Expense</string>
 
     <string name="home_title">Expense Overview</string>
+    <string name="tab_home">Home</string>
+    <string name="tab_analytics">Analytics</string>
+    <string name="tab_profile">Profile</string>
     <string name="home_subtitle">Track your spending by category</string>
     <string name="home_recent_expenses">Recent Expenses</string>
     <string name="home_add_expense_button">+ Add</string>
@@ -32,6 +35,8 @@
     <string name="search_title">Search Expenses</string>
     <string name="search_subtitle">Find by category or subcategory</string>
     <string name="search_empty_state">Type to search your expenses</string>
+    <string name="analytics_title">Analytics</string>
+    <string name="profile_title">Profile</string>
 
     <string name="expenses_no_details">No details</string>
     <string name="expenses_no_items">No expenses yet</string>
