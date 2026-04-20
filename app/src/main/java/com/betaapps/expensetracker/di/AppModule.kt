@@ -6,7 +6,7 @@ import com.betaapps.expensetracker.data.local.dao.ExpenseDao
 import com.betaapps.expensetracker.data.local.database.ExpenseDatabase
 import com.betaapps.expensetracker.data.repository.ExpenseRepositoryImpl
 import com.betaapps.expensetracker.domain.repository.ExpenseRepository
-import com.betaapps.expensetracker.domain.usecases.AddExpensUsecase
+import com.betaapps.expensetracker.domain.usecases.AddExpenseUsecase
 import com.betaapps.expensetracker.domain.usecases.DeleteExpenseUsecase
 import com.betaapps.expensetracker.domain.usecases.GetExpenseUsecase
 import com.betaapps.expensetracker.domain.usecases.GetExpensesUsecase
@@ -44,8 +44,8 @@ object AppModule {
     }
 
     @Provides
-    fun provideAddExpenseUseCase(repository: ExpenseRepository): AddExpensUsecase {
-        return AddExpensUsecase(repository)
+    fun provideAddExpenseUseCase(repository: ExpenseRepository): AddExpenseUsecase {
+        return AddExpenseUsecase(repository)
     }
 
     @Provides
