@@ -2,7 +2,7 @@ package com.betaapps.expensetracker.presentation.feature.addeditexpense
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.betaapps.expensetracker.domain.usecases.AddExpensUsecase
+import com.betaapps.expensetracker.domain.usecases.AddExpenseUsecase
 import com.betaapps.expensetracker.domain.usecases.GetExpenseUsecase
 import com.betaapps.expensetracker.presentation.feature.home.mapper.toDomain
 import com.betaapps.expensetracker.presentation.feature.home.mapper.toUi
@@ -31,7 +31,7 @@ sealed interface AddEditExpenseUiEvent {
 
 @HiltViewModel
 class AddEditExpenseViewModel @Inject constructor(
-    private val addExpensUsecase: AddExpensUsecase,
+    private val addExpenseUsecase: AddExpenseUsecase,
     private val getExpenseUsecase: GetExpenseUsecase,
 ) : ViewModel() {
 
@@ -126,7 +126,7 @@ class AddEditExpenseViewModel @Inject constructor(
         _state.value = current.copy(isSaving = true)
 
         viewModelScope.launch {
-            val saved = runCatching { addExpensUsecase(expense.toDomain()) }.isSuccess
+            val saved = runCatching { addExpenseUsecase(expense.toDomain()) }.isSuccess
             _state.value = _state.value.copy(isSaving = false)
             if (saved) {
                 _uiEvents.emit(AddEditExpenseUiEvent.SaveSuccess)

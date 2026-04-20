@@ -63,41 +63,58 @@ fun ExpensesList(
             }
 
             val dismissState = rememberSwipeToDismissBoxState()
-            LaunchedEffect(dismissState.currentValue) {
-                if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
-                    onExpenseSwipedToDelete(expense)
-                }
-            }
 
-            SwipeToDismissBox(
-                state = dismissState,
-                enableDismissFromStartToEnd = false,
-                enableDismissFromEndToStart = true,
-                backgroundContent = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.error , shape =  RoundedCornerShape(18.dp))
-                            .padding(horizontal = 20.dp),
-                        contentAlignment = Alignment.CenterEnd
-                    ) {
-                        Icon(
-                            painter = painterResource(android.R.drawable.ic_menu_delete),
-                            contentDescription = stringResource(R.string.expenses_delete_content_description),
-                            tint = Color.White
-                        )
-                    }
-                }
+            SwipeableExpenseTile(
+                expense = expense,
+                modifier = Modifier.graphicsLayer(alpha = alpha),
+                dismissState = dismissState,
+                onExpenseClicked = onExpenseClicked,
+                onExpenseSwipedToDelete = onExpenseSwipedToDelete
+            )
+        }
+    }
+}
+@Composable
+fun SwipeableExpenseTile(
+    expense: Expense,
+    modifier: Modifier = Modifier,
+    dismissState: androidx.compose.material3.SwipeToDismissBoxState = rememberSwipeToDismissBoxState(),
+    onExpenseClicked: (Expense) -> Unit,
+    onExpenseSwipedToDelete: (Expense) -> Unit
+) {
+    LaunchedEffect(dismissState.currentValue) {
+        if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
+            onExpenseSwipedToDelete(expense)
+        }
+    }
+
+    SwipeToDismissBox(
+        state = dismissState,
+        enableDismissFromStartToEnd = false,
+        enableDismissFromEndToStart = true,
+        backgroundContent = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.error, shape = RoundedCornerShape(18.dp))
+                    .padding(horizontal = 20.dp),
+                contentAlignment = Alignment.CenterEnd
             ) {
-                ExpenseTile(
-                    expense = expense,
-                    modifier = Modifier.graphicsLayer(alpha = alpha),
-                    onClick = {
-                        onExpenseClicked(expense)
-                    }
+                Icon(
+                    painter = painterResource(android.R.drawable.ic_menu_delete),
+                    contentDescription = stringResource(R.string.expenses_delete_content_description),
+                    tint = Color.White
                 )
             }
         }
+    ) {
+        ExpenseTile(
+            expense = expense,
+            modifier = modifier,
+            onClick = {
+                onExpenseClicked(expense)
+            }
+        )
     }
 }
 

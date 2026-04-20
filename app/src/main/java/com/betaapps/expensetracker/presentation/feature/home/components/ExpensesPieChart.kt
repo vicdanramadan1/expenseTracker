@@ -39,9 +39,6 @@ fun ExpensePieChart(
     modifier: Modifier = Modifier
 ) {
     val cardShape = RoundedCornerShape(18.dp)
-
-    // Memoize expensive grouping and totals until the list reference changes.
-
     val slices = remember(expenses) { buildSlices(expenses) }
     val total = remember(slices) { slices.sumOf { it.amount.toDouble() }.toFloat() }
 
