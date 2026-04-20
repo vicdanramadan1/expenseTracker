@@ -13,14 +13,14 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.betaapps.expensetracker.R
 import com.betaapps.expensetracker.presentation.feature.addeditexpense.AddEditExpenseRoute
-import com.betaapps.expensetracker.presentation.feature.home.HomeScreen
+import com.betaapps.expensetracker.presentation.feature.main.MainContainerScreen
 import com.betaapps.expensetracker.presentation.feature.search.SearchExpensesRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface ExpenseDestination : NavKey {
     @Serializable
-    data object Home : ExpenseDestination
+    data object Main : ExpenseDestination
 
     @Serializable
     data object Search : ExpenseDestination
@@ -33,7 +33,7 @@ sealed interface ExpenseDestination : NavKey {
 fun ExpenseNavHost(
     modifier: Modifier = Modifier
 ) {
-    val backStack = rememberNavBackStack(ExpenseDestination.Home)
+    val backStack = rememberNavBackStack(ExpenseDestination.Main)
     val popIfPossible = { if (backStack.size > 1) backStack.removeAt(backStack.lastIndex) }
 
     NavDisplay(
@@ -53,8 +53,8 @@ fun ExpenseNavHost(
                 NavEntry(key) { Text(text = stringResource(R.string.unknown_destination)) }
             }
         ) {
-            entry<ExpenseDestination.Home> {
-                HomeScreen(
+            entry<ExpenseDestination.Main> {
+                MainContainerScreen(
                     onAddExpenseClick = { backStack.add(ExpenseDestination.AddEdit()) },
                     onSearchClick = { backStack.add(ExpenseDestination.Search) },
                     onExpenseClick = { expense ->
