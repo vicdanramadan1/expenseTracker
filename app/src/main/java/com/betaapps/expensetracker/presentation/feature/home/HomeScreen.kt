@@ -28,10 +28,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.betaapps.expensetracker.R
+import com.betaapps.expensetracker.presentation.feature.home.components.BudgetSummary
 import com.betaapps.expensetracker.presentation.feature.home.components.SwipeableExpenseTile
 import com.betaapps.expensetracker.presentation.feature.home.model.Expense
 import com.betaapps.expensetracker.ui.theme.ExpenseTrackerTheme
-import com.betaapps.expensetracker.presentation.feature.home.components.ExpensePieChart
 
 @Composable
 fun HomeScreen(
@@ -71,12 +71,7 @@ fun HomeScreen(
                 )
             }
 
-            item {
-                ExpensePieChart(
-                    expenses = expenses,
-                    modifier = Modifier.padding(top = 2.dp)
-                )
-            }
+            item { }
 
             item {
                 Row(
