@@ -38,6 +38,14 @@
     <string name="analytics_title">Analytics</string>
     <string name="profile_title">Profile</string>
 
+    <string name="budget_month">April 2026</string>
+    <string name="budget_summary_title">Monthly Budget</string>
+    <string name="budget_name">My Budget</string>
+    <string name="budget_remaining">Remaining:  </string>
+    <string name="budget_near_limit">Careful! near limit</string>
+    <string name="budget_on_track">You are on track</string>
+    <string name="budget_excided">Budget Excided</string>
+    <string name="budget_top_spending">Top spending:</string>
     <string name="expenses_no_details">No details</string>
     <string name="expenses_no_items">No expenses yet</string>
     <string name="expenses_total_label">Total</string>
