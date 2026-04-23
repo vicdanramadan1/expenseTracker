@@ -17,7 +17,7 @@
     <string name="add_edit_subcategory_optional_label">Subcategory (optional)</string>
     <string name="add_edit_date_label">Date</string>
     <string name="add_edit_date_placeholder">Pick from calendar</string>
-    <string name="add_edit_button_saving">Saving...</string>
+    <string name="add_edit_button_saving">Saving…</string>
     <string name="add_edit_button_save_changes">Save Changes</string>
     <string name="add_edit_button_add_expense">Add Expense</string>
 
