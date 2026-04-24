@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.betaapps.expensetracker.R
-import com.betaapps.expensetracker.ui.theme.BudgetNegative
+import com.betaapps.expensetracker.ui.theme.BudgetDanger
 
 @Composable
 fun StatusChip(
@@ -53,7 +53,7 @@ fun StatusChip(
 @Composable
 private fun StatusChipPreview() {
     StatusChip(
-        color = BudgetNegative,
+        color = BudgetDanger,
         text = R.string.budget_summary_title
     )
 

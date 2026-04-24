@@ -47,7 +47,7 @@ fun ExpenseTile(
         modifier = modifier
             .fillMaxWidth()
             .shadow(
-                elevation = 10.dp,
+                elevation = 6.dp,
                 shape =  RoundedCornerShape(18.dp),
                 ambientColor = MaterialTheme.colorScheme.scrim,
                 spotColor = MaterialTheme.colorScheme.scrim
