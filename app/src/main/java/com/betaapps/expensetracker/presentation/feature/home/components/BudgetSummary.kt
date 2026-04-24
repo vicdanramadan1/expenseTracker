@@ -40,7 +40,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.betaapps.expensetracker.R
-import com.betaapps.expensetracker.ui.theme.BudgetPositive
+import com.betaapps.expensetracker.ui.theme.BudgetSafe
 import com.betaapps.expensetracker.ui.theme.ExpenseTrackerTheme
 import com.betaapps.expensetracker.ui.theme.TextSecondary
 
@@ -50,7 +50,7 @@ fun BudgetSummary(
     modifier: Modifier = Modifier,
     spentAmount: Double = 0.0,
     budgetAmount: Double = 0.0,
-    statusColor: Color = BudgetPositive,
+    statusColor: Color = BudgetSafe,
     topSpending: String = "",
     statusChipText: Int,
     onEditBudgetClick: () -> Unit,
@@ -63,7 +63,7 @@ fun BudgetSummary(
     Card(
         modifier = modifier
             .shadow(
-                elevation = 10.dp,
+                elevation = 6.dp,
                 shape = RoundedCornerShape(18.dp),
                 ambientColor = MaterialTheme.colorScheme.scrim,
                 spotColor = MaterialTheme.colorScheme.scrim
@@ -211,7 +211,7 @@ fun BudgetSummary(
 @Composable
 private fun BudgetRing(
     progress: Float,
-    color: Color = BudgetPositive
+    color: Color = BudgetSafe
 ) {
     val textColor = MaterialTheme.colorScheme.onSurface
     val ringColor = remember { color.copy(alpha = .1f) }
