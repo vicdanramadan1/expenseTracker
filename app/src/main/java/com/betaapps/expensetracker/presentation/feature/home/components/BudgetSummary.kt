@@ -43,6 +43,7 @@ import com.betaapps.expensetracker.R
 import com.betaapps.expensetracker.ui.theme.BudgetSafe
 import com.betaapps.expensetracker.ui.theme.ExpenseTrackerTheme
 import com.betaapps.expensetracker.ui.theme.TextSecondary
+import kotlin.math.roundToInt
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -52,13 +53,17 @@ fun BudgetSummary(
     budgetAmount: Double = 0.0,
     statusColor: Color = BudgetSafe,
     topSpending: String = "",
+    selectedMonthText: String,
     statusChipText: Int,
     onEditBudgetClick: () -> Unit,
-    onEditMothClick: () -> Unit
+    onMonthClick: () -> Unit
 ) {
-    val progress = (spentAmount / budgetAmount)
-        .toFloat()
-        .coerceIn(0f, 1f)
+    val progress = if (budgetAmount > 0.0) {
+        (spentAmount / budgetAmount).toFloat().coerceIn(0f, 1f)
+    } else {
+        0f
+    }
+    val remainingAmount = (budgetAmount - spentAmount).coerceAtLeast(0.0)
 
     Card(
         modifier = modifier
@@ -92,15 +97,15 @@ fun BudgetSummary(
                 )
 
                 TextButton(
-                    onClick = onEditMothClick,
+                    onClick = onMonthClick,
                 ) {
                     Icon(
                         Icons.Default.EditCalendar,
-                        contentDescription = null,
+                        contentDescription = stringResource(R.string.budget_select_month_content_description),
                         tint = TextSecondary,
                     )
                     Text(
-                        text = "April 2026",
+                        text = selectedMonthText,
                         modifier = Modifier.padding(horizontal = 4.dp),
                         color = TextSecondary
                     )
@@ -111,7 +116,7 @@ fun BudgetSummary(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                BudgetRing(progress = progress)
+                BudgetRing(progress = progress, color = statusColor)
 
                 Spacer(modifier = Modifier.width(18.dp))
 
@@ -120,7 +125,12 @@ fun BudgetSummary(
                     verticalArrangement = Arrangement.spacedBy(2.dp)
                 ) {
                     Text(
-                        text = "${spentAmount}/${budgetAmount}",
+                        text = "${stringResource(R.string.currency_amount, spentAmount)} / ${
+                            stringResource(
+                                R.string.currency_amount,
+                                budgetAmount
+                            )
+                        }",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -135,7 +145,7 @@ fun BudgetSummary(
                             color = TextSecondary
                         )
                         Text(
-                            text = (budgetAmount - spentAmount).toString() + "TRY",
+                            text = stringResource(R.string.currency_amount, remainingAmount),
                             color = statusColor,
                             style = MaterialTheme.typography.bodyMedium,
                         )
@@ -214,7 +224,7 @@ private fun BudgetRing(
     color: Color = BudgetSafe
 ) {
     val textColor = MaterialTheme.colorScheme.onSurface
-    val ringColor = remember { color.copy(alpha = .1f) }
+    val ringColor = remember(color) { color.copy(alpha = .1f) }
 
     Box(
         modifier = Modifier.size(96.dp),
@@ -242,7 +252,7 @@ private fun BudgetRing(
         }
 
         Text(
-            text = "30%",
+            text = "${(progress * 100).roundToInt()}%",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = textColor
@@ -258,9 +268,10 @@ private fun BudgetSummaryPreview() {
             modifier = Modifier.padding(16.dp),
             spentAmount = 180.0,
             budgetAmount = 200.0,
+            selectedMonthText = "Apr 2026",
             statusChipText = R.string.budget_on_track,
             onEditBudgetClick = {},
-            onEditMothClick = {}
+            onMonthClick = {}
         )
     }
 }

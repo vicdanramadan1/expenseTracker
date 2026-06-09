@@ -26,7 +26,14 @@ class HomeScreenViewModel @Inject constructor(
     private val searchExpensesUsecase: SearchExpensesUsecase,
 ) : ViewModel() {
 
-    private val _homeState = MutableStateFlow(HomeState())
+    private val initialMonthMillis = getMonthStartMillis(System.currentTimeMillis())
+    private var allExpenses: List<Expense> = emptyList()
+
+    private val _homeState = MutableStateFlow(
+        HomeState(
+            selectedMonthMillis = initialMonthMillis
+        )
+    )
     val homeState: StateFlow<HomeState> = _homeState.asStateFlow()
     private var loadJob: Job? = null
     init {
@@ -45,9 +52,8 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     private fun setExpenses(expenses: List<Expense>) {
-        _homeState.update { current ->
-            current.copy(isLoading = false, error = null, data = expenses)
-        }
+        allExpenses = expenses
+        updateSelectedMonthExpenses()
     }
 
     private fun upsertExpense(expense: Expense) {
@@ -67,6 +73,25 @@ class HomeScreenViewModel @Inject constructor(
         viewModelScope.launch {
             deleteExpenseUsecase(expense.toDomain())
         }
+    }
+
+    fun onMonthFieldClick() {
+        _homeState.update { it.copy(isMonthPickerVisible = true) }
+    }
+
+    fun onMonthPickerDismiss() {
+        _homeState.update { it.copy(isMonthPickerVisible = false) }
+    }
+
+    fun onMonthSelected(year: Int, month: Int) {
+        val monthMillis = getMonthStartMillis(year, month)
+        _homeState.update {
+            it.copy(
+                selectedMonthMillis = monthMillis,
+                isMonthPickerVisible = false
+            )
+        }
+        updateSelectedMonthExpenses()
     }
 
     fun onSearchQueryChange(query: String) {
@@ -94,7 +119,7 @@ class HomeScreenViewModel @Inject constructor(
         _homeState.update { it.copy(isLoading = true, error = null) }
         loadJob = viewModelScope.launch {
             getExpensesUsecase().collect { expenses ->
-                _homeState.update { it.copy(isLoading = false, error = null, data = expenses.toUiList()) }
+                setExpenses(expenses.toUiList())
             }
         }
     }
@@ -103,5 +128,23 @@ class HomeScreenViewModel @Inject constructor(
         viewModelScope.launch {
             addExpenseUsecase(expense.toDomain())
         }
+    }
+
+    private fun updateSelectedMonthExpenses() {
+        val selectedMonthMillis = _homeState.value.selectedMonthMillis
+        val selectedMonthExpenses = allExpenses.filter { isInSelectedMonth(it, selectedMonthMillis) }
+
+        _homeState.update {
+            it.copy(
+                isLoading = false,
+                error = null,
+                data = selectedMonthExpenses
+            )
+        }
+    }
+
+    private fun isInSelectedMonth(expense: Expense, selectedMonthMillis: Long): Boolean {
+        val expenseMillis = parseExpenseDateToMillis(expense.date) ?: return false
+        return isSameMonth(expenseMillis, selectedMonthMillis)
     }
 }
