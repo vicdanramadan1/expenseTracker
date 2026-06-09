@@ -27,6 +27,8 @@
     <string name="tab_profile">Profile</string>
     <string name="home_subtitle">Track your spending by category</string>
     <string name="home_recent_expenses">Recent Expenses</string>
+    <string name="home_selected_month_expenses">Expenses in %1$s</string>
+    <string name="home_month_expenses_empty">No expenses for this month</string>
     <string name="home_add_expense_button">+ Add</string>
     <string name="home_search_open_button">Search expenses</string>
     <string name="home_search_label">Search</string>
@@ -44,8 +46,13 @@
     <string name="budget_remaining">Remaining:  </string>
     <string name="budget_near_limit">Careful! near limit</string>
     <string name="budget_on_track">You are on track</string>
-    <string name="budget_excided">Budget Excided</string>
+    <string name="budget_excided">Budget Exceeded</string>
     <string name="budget_top_spending">Top spending:</string>
+    <string name="budget_top_spending_none">No spending</string>
+    <string name="budget_select_month_content_description">Select summary month</string>
+    <string name="budget_month_picker_title">Select Month</string>
+    <string name="budget_previous_year_content_description">Previous year</string>
+    <string name="budget_next_year_content_description">Next year</string>
     <string name="expenses_no_details">No details</string>
     <string name="expenses_no_items">No expenses yet</string>
     <string name="expenses_total_label">Total</string>
