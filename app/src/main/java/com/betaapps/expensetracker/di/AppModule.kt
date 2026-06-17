@@ -2,6 +2,8 @@ package com.betaapps.expensetracker.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.betaapps.expensetracker.data.local.dao.ExpenseDao
 import com.betaapps.expensetracker.data.local.database.ExpenseDatabase
 import com.betaapps.expensetracker.data.repository.ExpenseRepositoryImpl
@@ -21,6 +23,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+    private val MIGRATION_1_2 = object : Migration(1, 2) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE expenses ADD COLUMN isPaid INTEGER NOT NULL DEFAULT 1")
+        }
+    }
 
     @Provides
     @Singleton
@@ -29,7 +36,9 @@ object AppModule {
             context,
             ExpenseDatabase::class.java,
             "expense_database"
-        ).build()
+        )
+            .addMigrations(MIGRATION_1_2)
+            .build()
     }
 
     @Provides

@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
-import kotlinx.coroutines.flow.collect
 
 @Composable
 fun AddEditExpenseRoute(
@@ -35,7 +34,9 @@ fun AddEditExpenseRoute(
         onDateFieldClick = viewModel::onDateFieldClick,
         onDatePickerDismiss = viewModel::onDatePickerDismiss,
         onDateSelected = viewModel::onDateSelected,
-        onSaveClick = viewModel::saveExpense,
+        onSaveClick = { viewModel.saveExpense() },
+        onSaveAsPlannedClick = { viewModel.saveExpense(isPaid = false) },
+        onSaveAsPaidClick = { viewModel.saveExpense(isPaid = true) },
         onBackClick = onBackClick,
     )
 }

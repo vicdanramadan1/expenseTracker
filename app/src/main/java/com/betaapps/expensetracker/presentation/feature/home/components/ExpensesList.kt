@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
@@ -78,6 +77,7 @@ fun ExpensesList(
 fun SwipeableExpenseTile(
     expense: Expense,
     modifier: Modifier = Modifier,
+    showContainer: Boolean = true,
     dismissState: androidx.compose.material3.SwipeToDismissBoxState = rememberSwipeToDismissBoxState(),
     onExpenseClicked: (Expense) -> Unit,
     onExpenseSwipedToDelete: (Expense) -> Unit
@@ -111,6 +111,7 @@ fun SwipeableExpenseTile(
         ExpenseTile(
             expense = expense,
             modifier = modifier,
+            showContainer = showContainer,
             onClick = {
                 onExpenseClicked(expense)
             }
