@@ -5,5 +5,6 @@ data class Expense(
     val amount: Double,
     val category: String,
     val description: String?,
-    val createdAt: Long
+    val createdAt: Long,
+    val isPaid: Boolean = true
 )

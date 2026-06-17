@@ -70,7 +70,8 @@ class AddEditExpenseViewModel @Inject constructor(
                     amountInput = expense.amount.toString(),
                     selectedCategory = expense.category,
                     subCategory = expense.subCategory,
-                    selectedDateMillis = parseDateToMillis(expense.date)
+                    selectedDateMillis = parseDateToMillis(expense.date),
+                    isPaid = expense.isPaid
                 )
             }
         }
@@ -110,7 +111,7 @@ class AddEditExpenseViewModel @Inject constructor(
         )
     }
 
-    fun saveExpense() {
+    fun saveExpense(isPaid: Boolean = _state.value.isPaid) {
         val current = _state.value
         if (current.isSaving) return
         val selectedDateMillis = current.selectedDateMillis ?: return
@@ -120,10 +121,11 @@ class AddEditExpenseViewModel @Inject constructor(
             category = current.selectedCategory,
             subCategory = current.subCategory.trim(),
             amount = amount,
-            date = formatDate(selectedDateMillis)
+            date = formatDate(selectedDateMillis),
+            isPaid = isPaid
         )
 
-        _state.value = current.copy(isSaving = true)
+        _state.value = current.copy(isSaving = true, isPaid = isPaid)
 
         viewModelScope.launch {
             val saved = runCatching { addExpenseUsecase(expense.toDomain()) }.isSuccess

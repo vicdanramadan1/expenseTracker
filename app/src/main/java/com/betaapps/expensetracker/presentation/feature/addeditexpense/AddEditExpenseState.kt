@@ -10,5 +10,6 @@ data class AddEditExpenseState(
     val isCategoryExpanded: Boolean = false,
     val selectedDateMillis: Long? = null,
     val isDatePickerVisible: Boolean = false,
-    val isSaving: Boolean = false
+    val isSaving: Boolean = false,
+    val isPaid: Boolean = true
 )

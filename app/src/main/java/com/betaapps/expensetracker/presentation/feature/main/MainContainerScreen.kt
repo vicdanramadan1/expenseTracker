@@ -1,27 +1,37 @@
 package com.betaapps.expensetracker.presentation.feature.main
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Analytics
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,19 +40,19 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.betaapps.expensetracker.R
+import com.betaapps.expensetracker.presentation.common.ExpenseCollapsingHeader
+import com.betaapps.expensetracker.presentation.common.rememberCollapsingHeaderState
 import com.betaapps.expensetracker.presentation.feature.analytics.AnalyticsScreen
 import com.betaapps.expensetracker.presentation.feature.home.HomeScreen
 import com.betaapps.expensetracker.presentation.feature.home.model.Expense
-import com.betaapps.expensetracker.presentation.feature.profile.ProfileScreen
+import com.betaapps.expensetracker.ui.theme.BorderSubtle
 import com.betaapps.expensetracker.ui.theme.BudgetSafe
 import com.betaapps.expensetracker.ui.theme.TextSecondary
 
@@ -52,7 +62,8 @@ private enum class MainTab(
 ) {
     Home(R.string.tab_home, Icons.Default.Home),
     Analytics(R.string.tab_analytics, Icons.Default.Analytics),
-    Profile(R.string.tab_profile, Icons.Default.Person)
+    History(R.string.tab_history, Icons.Default.History),
+    Settings(R.string.tab_settings, Icons.Default.Settings)
 }
 
 @Composable
@@ -63,122 +74,197 @@ fun MainContainerScreen(
     modifier: Modifier = Modifier
 ) {
     var selectedTab by rememberSaveable { mutableStateOf(MainTab.Home) }
+    val scrollState = rememberScrollState()
+    val headerState = rememberCollapsingHeaderState(scrollState = scrollState)
+    val selectedTabTitle = stringResource(selectedTab.labelRes)
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        containerColor = Color(0xFFF8FAF8),
         bottomBar = {
-            NavigationBar(
-                containerColor = Color.White,
-                modifier = Modifier.shadow(    elevation = 10.dp,
-                    shape = RoundedCornerShape(18.dp),
-                    ambientColor = MaterialTheme.colorScheme.scrim,
-                    spotColor = MaterialTheme.colorScheme.scrim)
-            ) {
-                MainTab.entries.forEach { tab ->
-                    NavigationBarItem(
-                        selected = selectedTab == tab,
-                        onClick = { selectedTab = tab },
-                        icon = {
-                            Icon(
-                                imageVector = tab.iconRes,
-                                contentDescription = null
-                            )
-                        },
-                        colors = NavigationBarItemColors(
-                            selectedIndicatorColor = MaterialTheme.colorScheme.primary,
-                            selectedIconColor = Color.White,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            unselectedIconColor = TextSecondary,
-                            unselectedTextColor = TextSecondary,
-                            disabledIconColor =Color.White,
-                            disabledTextColor = Color.White
-                        ),
-                        label = { Text(text = stringResource(tab.labelRes)) }
-                    )
-                }
-            }
+            HomeBottomBar(
+                selectedTab = selectedTab,
+                onTabSelected = { selectedTab = it },
+                onAddExpenseClick = onAddExpenseClick,
+                modifier = Modifier.navigationBarsPadding()
+            )
         }
     ) { innerPadding ->
-        BoxWithConstraints(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-
+                .background(Color(0xFFF8FAF8))
         ) {
-            val headerHeight = maxHeight * 0.25f
-            val overlap = headerHeight * 0.40f
-            val contentTopPadding = headerHeight - overlap
-
-            Box(
-                modifier = Modifier.fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-            ) {
-                MainContainerHeader(
-                    title = stringResource(selectedTab.labelRes),
-                    headerHeight = headerHeight,
-                    modifier = Modifier.align(Alignment.TopCenter)
-                )
-
-                val contentModifier = Modifier
+            Column(
+                modifier = Modifier
                     .fillMaxSize()
+                    .verticalScroll(scrollState)
                     .padding(
-                        top = contentTopPadding,
-                        bottom = 16.dp,
-                        start = 16.dp,
-                        end = 16.dp
+                        top = headerState.height + 12.dp,
+                        bottom = 22.dp
                     )
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = 18.dp,
+                            end = 18.dp
+                        )
+                ) {
+                    when (selectedTab) {
+                        MainTab.Home -> HomeScreen(
+                            modifier = Modifier.fillMaxWidth(),
+                            onAddExpenseClick = onAddExpenseClick,
+                            onSearchClick = onSearchClick,
+                            onExpenseClick = onExpenseClick
+                        )
 
-                when (selectedTab) {
-                    MainTab.Home -> HomeScreen(
-                        modifier = contentModifier,
-                        onAddExpenseClick = onAddExpenseClick,
-                        onSearchClick = onSearchClick,
-                        onExpenseClick = onExpenseClick
-                    )
+                        MainTab.Analytics -> AnalyticsScreen(modifier = Modifier.fillMaxWidth())
+                        MainTab.History -> PlaceholderTabScreen(
+                            title = stringResource(R.string.tab_history),
+                            modifier = Modifier.fillMaxWidth()
+                        )
 
-                    MainTab.Analytics -> AnalyticsScreen(modifier = contentModifier)
-                    MainTab.Profile -> ProfileScreen(modifier = contentModifier)
+                        MainTab.Settings -> PlaceholderTabScreen(
+                            title = stringResource(R.string.tab_settings),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
                 }
             }
+
+            ExpenseCollapsingHeader(
+                title = selectedTabTitle,
+                state = headerState,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
         }
     }
 }
 
 @Composable
-private fun MainContainerHeader(
-    title: String,
-    headerHeight: Dp,
+private fun HomeBottomBar(
+    selectedTab: MainTab,
+    onTabSelected: (MainTab) -> Unit,
+    onAddExpenseClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val shape = RoundedCornerShape(bottomStart = 28.dp, bottomEnd = 28.dp)
-    val accent = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.10f)
-
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(headerHeight)
-            .background(BudgetSafe, shape)
+            .height(92.dp)
+            .padding(horizontal = 18.dp, vertical = 8.dp)
     ) {
-        Canvas(modifier = Modifier.matchParentSize()) {
-            val path = Path().apply {
-                moveTo(size.width * 0.70f, 0f)
-                lineTo(size.width, 0f)
-                lineTo(size.width * 0.78f, size.height)
-                lineTo(size.width * 0.48f, size.height)
-                close()
+        Surface(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .height(68.dp)
+                .border(1.dp, BorderSubtle.copy(alpha = 0.78f), RoundedCornerShape(24.dp)),
+            shape = RoundedCornerShape(24.dp),
+            color = Color.White,
+            shadowElevation = 12.dp
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                BottomBarItem(
+                    tab = MainTab.Home,
+                    selected = selectedTab == MainTab.Home,
+                    onClick = { onTabSelected(MainTab.Home) },
+                    modifier = Modifier.weight(1f)
+                )
+                BottomBarItem(
+                    tab = MainTab.Analytics,
+                    selected = selectedTab == MainTab.Analytics,
+                    onClick = { onTabSelected(MainTab.Analytics) },
+                    modifier = Modifier.weight(1f)
+                )
+                Spacer(modifier = Modifier.width(76.dp))
+                BottomBarItem(
+                    tab = MainTab.History,
+                    selected = selectedTab == MainTab.History,
+                    onClick = { onTabSelected(MainTab.History) },
+                    modifier = Modifier.weight(1f)
+                )
+                BottomBarItem(
+                    tab = MainTab.Settings,
+                    selected = selectedTab == MainTab.Settings,
+                    onClick = { onTabSelected(MainTab.Settings) },
+                    modifier = Modifier.weight(1f)
+                )
             }
-            drawPath(path = path, color = accent)
         }
 
-        Text(
-            text = title,
+        FloatingActionButton(
+            onClick = onAddExpenseClick,
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .padding(top = 48.dp)
-            ,
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onPrimary
+                .size(64.dp),
+            shape = CircleShape,
+            containerColor = BudgetSafe,
+            contentColor = Color.White
+        ) {
+            Icon(
+                imageVector = Icons.Default.Add,
+                contentDescription = stringResource(R.string.home_add_expense_content_description),
+                modifier = Modifier.size(32.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun BottomBarItem(
+    tab: MainTab,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val color = if (selected) BudgetSafe else TextSecondary
+
+    Column(
+        modifier = modifier
+            .fillMaxHeight()
+            .clickable(onClick = onClick),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            imageVector = tab.iconRes,
+            contentDescription = null,
+            tint = color,
+            modifier = Modifier.size(24.dp)
+        )
+        Text(
+            text = stringResource(tab.labelRes),
+            color = color,
+            style = MaterialTheme.typography.bodyMedium,
+            fontSize = 12.sp,
+            lineHeight = 15.sp,
+            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal
+        )
+    }
+}
+
+@Composable
+private fun PlaceholderTabScreen(
+    title: String,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier.height(420.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.headlineSmall,
+            color = TextSecondary
         )
     }
 }

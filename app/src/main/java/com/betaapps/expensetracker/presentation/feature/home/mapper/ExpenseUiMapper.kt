@@ -14,7 +14,8 @@ fun DomainExpense.toUi(): UiExpense = UiExpense(
     category = ExpenseCategory.fromString(category),
     subCategory = description.orEmpty(),
     amount = amount,
-    date = formatDate(createdAt)
+    date = formatDate(createdAt),
+    isPaid = isPaid
 )
 
 fun List<DomainExpense>.toUiList(): List<UiExpense> = map { it.toUi() }
@@ -24,7 +25,8 @@ fun UiExpense.toDomain(): DomainExpense = DomainExpense(
     amount = amount,
     category = category.name,
     description = subCategory.ifBlank { null },
-    createdAt = parseDateToEpoch(date)
+    createdAt = parseDateToEpoch(date),
+    isPaid = isPaid
 )
 
 fun List<UiExpense>.toDomainList(): List<DomainExpense> = map { it.toDomain() }
