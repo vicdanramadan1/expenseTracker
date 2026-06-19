@@ -10,6 +10,7 @@ import com.betaapps.expensetracker.data.repository.ExpenseRepositoryImpl
 import com.betaapps.expensetracker.domain.repository.ExpenseRepository
 import com.betaapps.expensetracker.domain.usecases.AddExpenseUsecase
 import com.betaapps.expensetracker.domain.usecases.DeleteExpenseUsecase
+import com.betaapps.expensetracker.domain.usecases.GetExpenseHistoryUsecase
 import com.betaapps.expensetracker.domain.usecases.GetExpenseUsecase
 import com.betaapps.expensetracker.domain.usecases.GetExpensesUsecase
 import com.betaapps.expensetracker.domain.usecases.SearchExpensesUsecase
@@ -65,6 +66,11 @@ object AppModule {
     @Provides
     fun provideGetExpensesUseCase(repository: ExpenseRepository): GetExpensesUsecase {
         return GetExpensesUsecase(repository)
+    }
+
+    @Provides
+    fun provideGetExpenseHistoryUseCase(repository: ExpenseRepository): GetExpenseHistoryUsecase {
+        return GetExpenseHistoryUsecase(repository)
     }
 
     @Provides

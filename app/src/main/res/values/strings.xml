@@ -62,6 +62,18 @@
     <string name="search_empty_state">Type to search your expenses</string>
     <string name="analytics_title">Analytics</string>
     <string name="profile_title">Profile</string>
+    <string name="history_search_placeholder">Search expenses</string>
+    <string name="history_filter_content_description">Filter history</string>
+    <string name="history_select_month_content_description">Select history month</string>
+    <string name="history_total_expenses">Total Expenses</string>
+    <string name="history_today">Today</string>
+    <string name="history_yesterday">Yesterday</string>
+    <string name="history_empty_title">No expenses found</string>
+    <string name="history_empty_message">Try another month, search, or status filter.</string>
+    <string name="history_error_title">Could not load history</string>
+    <string name="history_error_message">Please try again.</string>
+    <string name="history_previous_year">Previous</string>
+    <string name="history_next_year">Next</string>
 
     <string name="budget_month">April 2026</string>
     <string name="budget_summary_title">Monthly Budget</string>

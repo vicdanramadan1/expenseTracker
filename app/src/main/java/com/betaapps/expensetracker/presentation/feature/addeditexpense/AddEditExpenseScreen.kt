@@ -77,6 +77,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.betaapps.expensetracker.R
+import com.betaapps.expensetracker.presentation.common.ExpenseTopAppBar
+import com.betaapps.expensetracker.presentation.common.ExpenseTopAppBarIconButton
 import com.betaapps.expensetracker.presentation.feature.home.model.ExpenseCategory
 import com.betaapps.expensetracker.ui.theme.BorderSubtle
 import com.betaapps.expensetracker.ui.theme.BudgetSafe
@@ -226,50 +228,36 @@ private fun AddExpenseTopBar(
     onBackClick: () -> Unit,
     onSaveClick: () -> Unit
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(66.dp)
-    ) {
-        IconButton(
-            onClick = onBackClick,
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .size(48.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = stringResource(R.string.action_close),
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.size(34.dp)
-            )
-        }
-
-        Text(
-            text = title,
-            modifier = Modifier.align(Alignment.Center),
-            color = MaterialTheme.colorScheme.onSurface,
-            style = MaterialTheme.typography.titleLarge,
+    ExpenseTopAppBar(
+        title = title,
+        height = 66.dp,
+        horizontalPadding = 0.dp,
+        titleStyle = MaterialTheme.typography.titleLarge.copy(
             fontSize = 20.sp,
             lineHeight = 24.sp,
             fontWeight = FontWeight.Bold
-        )
-
-        IconButton(
-            onClick = onSaveClick,
-            enabled = canSave,
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .size(48.dp)
-        ) {
-            Icon(
+        ),
+        navigationIcon = {
+            ExpenseTopAppBarIconButton(
+                imageVector = Icons.Default.Close,
+                contentDescription = stringResource(R.string.action_close),
+                onClick = onBackClick,
+                iconSize = 34.dp,
+                buttonSize = 48.dp
+            )
+        },
+        endContent = {
+            ExpenseTopAppBarIconButton(
                 imageVector = Icons.Default.Check,
                 contentDescription = stringResource(R.string.add_edit_save_expense_title),
+                onClick = onSaveClick,
+                enabled = canSave,
                 tint = if (canSave) BudgetSafe else TextSecondary.copy(alpha = 0.45f),
-                modifier = Modifier.size(34.dp)
+                iconSize = 34.dp,
+                buttonSize = 48.dp
             )
         }
-    }
+    )
 }
 
 @Composable

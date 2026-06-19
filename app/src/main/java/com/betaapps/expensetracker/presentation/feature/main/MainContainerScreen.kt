@@ -50,6 +50,7 @@ import com.betaapps.expensetracker.R
 import com.betaapps.expensetracker.presentation.common.ExpenseCollapsingHeader
 import com.betaapps.expensetracker.presentation.common.rememberCollapsingHeaderState
 import com.betaapps.expensetracker.presentation.feature.analytics.AnalyticsScreen
+import com.betaapps.expensetracker.presentation.feature.history.HistoryRoute
 import com.betaapps.expensetracker.presentation.feature.home.HomeScreen
 import com.betaapps.expensetracker.presentation.feature.home.model.Expense
 import com.betaapps.expensetracker.ui.theme.BorderSubtle
@@ -96,6 +97,7 @@ fun MainContainerScreen(
                 .padding(innerPadding)
                 .background(Color(0xFFF8FAF8))
         ) {
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -122,9 +124,9 @@ fun MainContainerScreen(
                         )
 
                         MainTab.Analytics -> AnalyticsScreen(modifier = Modifier.fillMaxWidth())
-                        MainTab.History -> PlaceholderTabScreen(
-                            title = stringResource(R.string.tab_history),
-                            modifier = Modifier.fillMaxWidth()
+                        MainTab.History -> HistoryRoute(
+                            modifier = Modifier.fillMaxSize(),
+                            onExpenseClick = onExpenseClick
                         )
 
                         MainTab.Settings -> PlaceholderTabScreen(

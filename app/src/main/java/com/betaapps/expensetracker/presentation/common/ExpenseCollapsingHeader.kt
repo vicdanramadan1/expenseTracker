@@ -4,17 +4,13 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.NotificationsNone
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.derivedStateOf
@@ -70,7 +66,8 @@ fun ExpenseCollapsingHeader(
     state: CollapsingHeaderState,
     modifier: Modifier = Modifier,
     onMenuClick: () -> Unit = {},
-    onNotificationsClick: () -> Unit = {}
+    onNotificationsClick: () -> Unit = {},
+    endContent: (@Composable BoxScope.(iconSize: Dp) -> Unit)? = null
 ) {
     val expandedContentAlpha = (1f - (state.collapseFraction * 1.35f)).coerceIn(0f, 1f)
     val toolbarTopPadding = lerp(22.dp, 4.dp, state.collapseFraction)
@@ -146,49 +143,33 @@ fun ExpenseCollapsingHeader(
             }
         }
 
-        Box(
+        ExpenseTopAppBar(
+            title = title,
+            onMenuClick = onMenuClick,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp)
-                .padding(top = toolbarTopPadding)
-        ) {
-            IconButton(
-                onClick = onMenuClick,
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .size(44.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Menu,
-                    contentDescription = stringResource(R.string.home_menu_content_description),
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.size(menuIconSize)
-                )
-            }
-
-            Text(
-                text = title,
-                modifier = Modifier.align(Alignment.Center),
-                style = MaterialTheme.typography.headlineMedium,
+                .padding(top = toolbarTopPadding),
+            height = 44.dp,
+            horizontalPadding = 24.dp,
+            titleStyle = MaterialTheme.typography.headlineMedium.copy(
                 fontSize = titleFontSize,
                 lineHeight = titleLineHeight,
-                fontWeight = FontWeight.ExtraBold,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-
-            IconButton(
-                onClick = onNotificationsClick,
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .size(44.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.NotificationsNone,
-                    contentDescription = stringResource(R.string.home_notifications_content_description),
-                    tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.size(notificationIconSize)
-                )
+                fontWeight = FontWeight.ExtraBold
+            ),
+            menuIconSize = menuIconSize,
+            endContent = {
+                val customEndContent = endContent
+                if (customEndContent == null) {
+                    ExpenseTopAppBarIconButton(
+                        imageVector = Icons.Default.NotificationsNone,
+                        contentDescription = stringResource(R.string.home_notifications_content_description),
+                        onClick = onNotificationsClick,
+                        iconSize = notificationIconSize
+                    )
+                } else {
+                    customEndContent(notificationIconSize)
+                }
             }
-        }
+        )
     }
 }

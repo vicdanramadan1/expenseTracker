@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -25,6 +24,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.CircularProgressIndicator
 import com.betaapps.expensetracker.R
+import com.betaapps.expensetracker.presentation.common.ExpenseTopAppBar
 import com.betaapps.expensetracker.presentation.feature.home.HomeState
 import com.betaapps.expensetracker.presentation.feature.home.components.ExpensesList
 import com.betaapps.expensetracker.presentation.feature.home.model.Expense
@@ -57,28 +57,24 @@ fun SearchExpensesScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        text = stringResource(R.string.search_title),
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = stringResource(R.string.search_subtitle),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+            ExpenseTopAppBar(
+                title = stringResource(R.string.search_title),
+                height = 52.dp,
+                horizontalPadding = 0.dp,
+                titleStyle = MaterialTheme.typography.headlineSmall,
+                endContent = {
+                    TextButton(onClick = onBackClick) {
+                        Text(stringResource(R.string.action_close))
+                    }
                 }
+            )
 
-                TextButton(onClick = onBackClick) {
-                    Text(stringResource(R.string.action_close))
-                }
-            }
+            Text(
+                text = stringResource(R.string.search_subtitle),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
 
             OutlinedTextField(
                 value = state.searchQuery,
