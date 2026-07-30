@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,17 +15,11 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
@@ -48,22 +41,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.betaapps.expensetracker.R
-import com.betaapps.expensetracker.presentation.common.ExpenseTopAppBar
-import com.betaapps.expensetracker.presentation.common.ExpenseTopAppBarIconButton
-import com.betaapps.expensetracker.presentation.feature.home.components.ExpenseTile
+import com.betaapps.expensetracker.presentation.feature.home.components.SwipeableExpenseTile
 import com.betaapps.expensetracker.presentation.feature.home.model.Expense
 import com.betaapps.expensetracker.presentation.feature.home.model.ExpenseCategory
 import com.betaapps.expensetracker.ui.theme.BorderSubtle
 import com.betaapps.expensetracker.ui.theme.BudgetSafe
-import com.betaapps.expensetracker.ui.theme.BudgetWarning
 import com.betaapps.expensetracker.ui.theme.ExpenseTrackerTheme
 import com.betaapps.expensetracker.ui.theme.TextSecondary
 import java.util.Calendar
@@ -96,8 +84,6 @@ fun HistoryScreen(
             .fillMaxSize()
             .background(Color(0xFFF8FAF8))
             .statusBarsPadding()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 18.dp)
             .padding(top = 14.dp, bottom = 26.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
@@ -129,38 +115,6 @@ fun HistoryScreen(
             )
         }
     }
-}
-
-@Composable
-private fun HistoryTopBar(
-    selectedMonthText: String,
-    onMonthClick: () -> Unit
-) {
-    ExpenseTopAppBar(
-        title = stringResource(R.string.tab_history),
-        height = 56.dp,
-        horizontalPadding = 0.dp,
-        titleStyle = MaterialTheme.typography.headlineMedium.copy(
-            fontSize = 28.sp,
-            lineHeight = 34.sp,
-            fontWeight = FontWeight.ExtraBold
-        ),
-        navigationIcon = {
-            ExpenseTopAppBarIconButton(
-                imageVector = Icons.Default.Menu,
-                contentDescription = stringResource(R.string.home_menu_content_description),
-                onClick = {},
-                iconSize = 30.dp,
-                buttonSize = 46.dp
-            )
-        },
-        endContent = {
-            MonthSelectorButton(
-                text = selectedMonthText,
-                onClick = onMonthClick
-            )
-        }
-    )
 }
 
 @Composable
@@ -351,14 +305,15 @@ private fun HistoryExpenseSection(
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(22.dp),
-            color = Color.White,
             border = BorderStroke(1.dp, BorderSubtle.copy(alpha = 0.86f))
         ) {
             Column {
                 group.expenses.forEachIndexed { index, expense ->
-                    ExpenseTile(
+                    SwipeableExpenseTile(
                         expense = expense,
-                        onClick = { onExpenseClick(expense) }
+                        showContainer = false,
+                        onExpenseClicked = onExpenseClick,
+                        onExpenseSwipedToDelete = {}
                     )
                     if (index != group.expenses.lastIndex) {
                         HorizontalDivider(color = BorderSubtle.copy(alpha = 0.72f))

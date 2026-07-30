@@ -192,7 +192,7 @@ private fun RecentExpensesCard(
                 )
                 ExpenseFilterChip(
                     label = stringResource(R.string.home_filter_planned),
-                    modifier = Modifier.weight(1.16f)
+                    modifier = Modifier.weight(1f)
                 )
                 Box(
                     modifier = Modifier
