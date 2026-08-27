@@ -1,6 +1,5 @@
 package com.betaapps.expensetracker.presentation.feature.home
 
-import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -11,13 +10,6 @@ private const val MONTH_LABEL_PATTERN = "MMM yyyy"
 
 fun formatMonthLabel(monthMillis: Long): String {
     return SimpleDateFormat(MONTH_LABEL_PATTERN, Locale.getDefault()).format(Date(monthMillis))
-}
-
-fun getShortMonthNames(): List<String> {
-    return DateFormatSymbols.getInstance(Locale.getDefault())
-        .shortMonths
-        .filter { it.isNotBlank() }
-        .take(12)
 }
 
 fun parseExpenseDateToMillis(rawDate: String): Long? {
