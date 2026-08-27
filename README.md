@@ -60,3 +60,11 @@ This project uses GitHub Actions to:
 - Build project on every push
 - Run unit tests
 - Verify lint rules
+
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/home.jpg" width="250">
+  <img src="screenshots/history.jpg" width="250">
+  <img src="screenshots/addExpense.jpg" width="250">
+</p>
