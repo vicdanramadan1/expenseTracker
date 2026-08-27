@@ -15,10 +15,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,10 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,6 +41,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.betaapps.expensetracker.R
+import com.betaapps.expensetracker.presentation.common.Chip
+import com.betaapps.expensetracker.presentation.common.MonthPicker
 import com.betaapps.expensetracker.presentation.feature.home.components.BudgetSummary
 import com.betaapps.expensetracker.presentation.feature.home.components.SwipeableExpenseTile
 import com.betaapps.expensetracker.presentation.feature.home.mapper.toBudgetSummaryUiState
@@ -57,7 +54,6 @@ import com.betaapps.expensetracker.ui.theme.BudgetSafe
 import com.betaapps.expensetracker.ui.theme.BudgetWarning
 import com.betaapps.expensetracker.ui.theme.ExpenseTrackerTheme
 import com.betaapps.expensetracker.ui.theme.TextSecondary
-import java.util.Calendar
 
 @Composable
 fun HomeScreen(
@@ -87,7 +83,7 @@ fun HomeScreen(
     }
 
     if (homeState.isMonthPickerVisible) {
-        MonthPickerDialog(
+        MonthPicker(
             selectedMonthMillis = homeState.selectedMonthMillis,
             onMonthSelected = viewModel::onMonthSelected,
             onDismiss = viewModel::onMonthPickerDismiss
@@ -181,18 +177,23 @@ private fun RecentExpensesCard(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                ExpenseFilterChip(
+                Chip(
                     label = stringResource(R.string.home_filter_all),
                     selected = true,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    horizontalPadding = 8.dp
                 )
-                ExpenseFilterChip(
+                Chip(
                     label = stringResource(R.string.home_filter_paid),
-                    modifier = Modifier.weight(1f)
+                    selected = false,
+                    modifier = Modifier.weight(1f),
+                    horizontalPadding = 8.dp
                 )
-                ExpenseFilterChip(
+                Chip(
                     label = stringResource(R.string.home_filter_planned),
-                    modifier = Modifier.weight(1f)
+                    selected = false,
+                    modifier = Modifier.weight(1f),
+                    horizontalPadding = 8.dp
                 )
                 Box(
                     modifier = Modifier
@@ -242,36 +243,6 @@ private fun RecentExpensesCard(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun ExpenseFilterChip(
-    label: String,
-    selected: Boolean = false,
-    modifier: Modifier = Modifier
-) {
-    val containerColor = if (selected) BudgetSafe else Color.White
-    val contentColor = if (selected) Color.White else MaterialTheme.colorScheme.onSurface
-    val borderColor = if (selected) BudgetSafe else BorderSubtle
-
-    Box(
-        modifier = modifier
-            .height(36.dp)
-            .clip(RoundedCornerShape(999.dp))
-            .background(containerColor)
-            .border(1.dp, borderColor, RoundedCornerShape(999.dp))
-            .padding(horizontal = 8.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = label,
-            color = contentColor,
-            style = MaterialTheme.typography.titleMedium,
-            fontSize = 13.sp,
-            lineHeight = 16.sp,
-            maxLines = 1
-        )
     }
 }
 
@@ -332,95 +303,6 @@ private fun RecentExpensesList(
             }
         }
     }
-}
-
-@Composable
-private fun MonthPickerDialog(
-    selectedMonthMillis: Long,
-    onMonthSelected: (year: Int, month: Int) -> Unit,
-    onDismiss: () -> Unit
-) {
-    val selectedCalendar = remember(selectedMonthMillis) {
-        Calendar.getInstance().apply { timeInMillis = selectedMonthMillis }
-    }
-    val selectedYear = selectedCalendar.get(Calendar.YEAR)
-    val selectedMonth = selectedCalendar.get(Calendar.MONTH)
-    var visibleYear by remember(selectedMonthMillis) { mutableIntStateOf(selectedYear) }
-    val monthNames = remember { getShortMonthNames() }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(text = stringResource(R.string.budget_month_picker_title))
-        },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextButton(onClick = { visibleYear -= 1 }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                            contentDescription = stringResource(R.string.budget_previous_year_content_description)
-                        )
-                    }
-                    Text(
-                        text = visibleYear.toString(),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    TextButton(onClick = { visibleYear += 1 }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                            contentDescription = stringResource(R.string.budget_next_year_content_description)
-                        )
-                    }
-                }
-
-                monthNames.chunked(3).forEachIndexed { rowIndex, rowMonths ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        rowMonths.forEachIndexed { columnIndex, monthName ->
-                            val monthIndex = rowIndex * 3 + columnIndex
-                            val isSelected = visibleYear == selectedYear && monthIndex == selectedMonth
-                            TextButton(
-                                onClick = { onMonthSelected(visibleYear, monthIndex) },
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(horizontal = 1.dp),
-                                colors = ButtonDefaults.textButtonColors(
-                                    containerColor = if (isSelected) {
-                                        MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
-                                    } else {
-                                        Color.Transparent
-                                    },
-                                    contentColor = if (isSelected) {
-                                        MaterialTheme.colorScheme.primary
-                                    } else {
-                                        MaterialTheme.colorScheme.onSurface
-                                    }
-                                )
-                            ) {
-                                Text(
-                                    text = monthName,
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.action_cancel))
-            }
-        }
-    )
 }
 
 @Preview(showBackground = true)

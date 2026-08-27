@@ -1,6 +1,5 @@
 package com.betaapps.expensetracker.presentation.feature.history
 
-import java.text.DateFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -16,13 +15,6 @@ fun formatHistoryMonthLabel(monthMillis: Long): String {
 
 fun formatHistoryDateLabel(dateMillis: Long): String {
     return SimpleDateFormat(HISTORY_DATE_PATTERN, Locale.getDefault()).format(Date(dateMillis))
-}
-
-fun getHistoryShortMonthNames(): List<String> {
-    return DateFormatSymbols.getInstance(Locale.getDefault())
-        .shortMonths
-        .filter { it.isNotBlank() }
-        .take(12)
 }
 
 fun parseHistoryExpenseDateToMillis(rawDate: String): Long? {
