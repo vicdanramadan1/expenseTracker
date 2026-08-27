@@ -21,8 +21,6 @@ import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -31,12 +29,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.betaapps.expensetracker.R
+import com.betaapps.expensetracker.presentation.common.Chip
 import com.betaapps.expensetracker.presentation.feature.home.components.SwipeableExpenseTile
 import com.betaapps.expensetracker.presentation.feature.home.model.Expense
 import com.betaapps.expensetracker.presentation.feature.home.model.ExpenseCategory
@@ -54,7 +49,6 @@ import com.betaapps.expensetracker.ui.theme.BorderSubtle
 import com.betaapps.expensetracker.ui.theme.BudgetSafe
 import com.betaapps.expensetracker.ui.theme.ExpenseTrackerTheme
 import com.betaapps.expensetracker.ui.theme.TextSecondary
-import java.util.Calendar
 
 @Composable
 fun HistoryScreen(
@@ -62,8 +56,6 @@ fun HistoryScreen(
     onSearchQueryChange: (String) -> Unit,
     onStatusFilterSelected: (HistoryStatusFilter) -> Unit,
     onMonthFieldClick: () -> Unit,
-    onMonthPickerDismiss: () -> Unit,
-    onMonthSelected: (year: Int, month: Int) -> Unit,
     onExpenseClick: (Expense) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -71,23 +63,16 @@ fun HistoryScreen(
         formatHistoryMonthLabel(state.selectedMonthMillis)
     }
 
-    if (state.isMonthPickerVisible) {
-        HistoryMonthPickerDialog(
-            selectedMonthMillis = state.selectedMonthMillis,
-            onMonthSelected = onMonthSelected,
-            onDismiss = onMonthPickerDismiss
-        )
-    }
-
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFFF8FAF8))
-            .statusBarsPadding()
-            .padding(top = 14.dp, bottom = 26.dp),
-        verticalArrangement = Arrangement.spacedBy(18.dp)
+            .background(Color(0xFFF8FAF8)),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-
+        MonthSelectorButton(
+            text = monthLabel,
+            onClick = onMonthFieldClick
+        )
         HistorySearchRow(
             query = state.searchQuery,
             onQueryChange = onSearchQueryChange
@@ -143,8 +128,8 @@ private fun MonthSelectorButton(
             text = text,
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.titleMedium,
-            fontSize = 15.sp,
-            lineHeight = 19.sp,
+            fontSize = 14.sp,
+            lineHeight = 18.sp,
             fontWeight = FontWeight.SemiBold,
             maxLines = 1
         )
@@ -170,13 +155,22 @@ private fun HistorySearchRow(
         OutlinedTextField(
             value = query,
             onValueChange = onQueryChange,
+            textStyle = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.onSurface,
+                fontSize = 14.sp,
+                lineHeight = 18.sp,
+                fontWeight = FontWeight.Medium
+            ),
             modifier = Modifier
                 .weight(1f)
-                .height(58.dp),
+                .height(52.dp),
             placeholder = {
                 Text(
                     text = stringResource(R.string.history_search_placeholder),
                     color = TextSecondary,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontSize = 14.sp,
+                    lineHeight = 18.sp,
                     maxLines = 1
                 )
             },
@@ -185,7 +179,7 @@ private fun HistorySearchRow(
                     imageVector = Icons.Default.Search,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.size(28.dp)
+                    modifier = Modifier.size(24.dp)
                 )
             },
             singleLine = true,
@@ -201,7 +195,7 @@ private fun HistorySearchRow(
 
         Box(
             modifier = Modifier
-                .size(58.dp)
+                .size(52.dp)
                 .clip(RoundedCornerShape(18.dp))
                 .background(Color.White)
                 .border(1.dp, BorderSubtle, RoundedCornerShape(18.dp)),
@@ -211,7 +205,7 @@ private fun HistorySearchRow(
                 imageVector = Icons.Default.FilterList,
                 contentDescription = stringResource(R.string.history_filter_content_description),
                 tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.size(28.dp)
+                modifier = Modifier.size(24.dp)
             )
         }
     }
@@ -227,43 +221,12 @@ private fun HistoryStatusFilters(
         verticalAlignment = Alignment.CenterVertically
     ) {
         HistoryStatusFilter.entries.forEach { filter ->
-            HistoryFilterChip(
+            Chip(
                 label = stringResource(filter.labelRes),
                 selected = selectedFilter == filter,
                 onClick = { onFilterSelected(filter) }
             )
         }
-    }
-}
-
-@Composable
-private fun HistoryFilterChip(
-    label: String,
-    selected: Boolean,
-    onClick: () -> Unit
-) {
-    val contentColor = if (selected) Color.White else MaterialTheme.colorScheme.onSurface
-    val borderColor = if (selected) BudgetSafe else BorderSubtle
-
-    Box(
-        modifier = Modifier
-            .height(44.dp)
-            .clip(RoundedCornerShape(999.dp))
-            .background(if (selected) BudgetSafe else Color.White)
-            .border(1.dp, borderColor, RoundedCornerShape(999.dp))
-            .clickable(onClick = onClick)
-            .padding(horizontal = 22.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = label,
-            color = contentColor,
-            style = MaterialTheme.typography.titleMedium,
-            fontSize = 15.sp,
-            lineHeight = 18.sp,
-            fontWeight = FontWeight.Medium,
-            maxLines = 1
-        )
     }
 }
 
@@ -297,8 +260,8 @@ private fun HistoryExpenseSection(
             text = historySectionTitle(group.dayStartMillis),
             color = TextSecondary,
             style = MaterialTheme.typography.titleMedium,
-            fontSize = 16.sp,
-            lineHeight = 20.sp,
+            fontSize = 14.sp,
+            lineHeight = 18.sp,
             fontWeight = FontWeight.SemiBold
         )
 
@@ -343,16 +306,16 @@ private fun HistoryTotalCard(totalExpenses: Double) {
                 text = stringResource(R.string.history_total_expenses),
                 color = TextSecondary,
                 style = MaterialTheme.typography.titleMedium,
-                fontSize = 15.sp,
-                lineHeight = 19.sp,
+                fontSize = 13.sp,
+                lineHeight = 16.sp,
                 fontWeight = FontWeight.SemiBold
             )
             Text(
                 text = stringResource(R.string.currency_amount, totalExpenses),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleLarge,
-                fontSize = 22.sp,
-                lineHeight = 26.sp,
+                fontSize = 18.sp,
+                lineHeight = 22.sp,
                 fontWeight = FontWeight.ExtraBold
             )
         }
@@ -395,96 +358,19 @@ private fun HistoryMessageCard(
                 text = title,
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleMedium,
+                fontSize = 15.sp,
+                lineHeight = 19.sp,
                 fontWeight = FontWeight.ExtraBold
             )
             Text(
                 text = message,
                 color = TextSecondary,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                fontSize = 13.sp,
+                lineHeight = 16.sp
             )
         }
     }
-}
-
-@Composable
-private fun HistoryMonthPickerDialog(
-    selectedMonthMillis: Long,
-    onMonthSelected: (year: Int, month: Int) -> Unit,
-    onDismiss: () -> Unit
-) {
-    val selectedCalendar = remember(selectedMonthMillis) {
-        Calendar.getInstance().apply { timeInMillis = selectedMonthMillis }
-    }
-    val selectedYear = selectedCalendar.get(Calendar.YEAR)
-    val selectedMonth = selectedCalendar.get(Calendar.MONTH)
-    val monthNames = remember { getHistoryShortMonthNames() }
-    var visibleYear by remember(selectedMonthMillis) { mutableIntStateOf(selectedYear) }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(text = stringResource(R.string.budget_month_picker_title)) },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextButton(onClick = { visibleYear -= 1 }) {
-                        Text(stringResource(R.string.history_previous_year))
-                    }
-                    Text(
-                        text = visibleYear.toString(),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                    TextButton(onClick = { visibleYear += 1 }) {
-                        Text(stringResource(R.string.history_next_year))
-                    }
-                }
-
-                monthNames.chunked(3).forEachIndexed { rowIndex, rowMonths ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        rowMonths.forEachIndexed { columnIndex, monthName ->
-                            val monthIndex = rowIndex * 3 + columnIndex
-                            val isSelected = visibleYear == selectedYear && monthIndex == selectedMonth
-                            TextButton(
-                                onClick = { onMonthSelected(visibleYear, monthIndex) },
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(horizontal = 1.dp),
-                                colors = ButtonDefaults.textButtonColors(
-                                    containerColor = if (isSelected) {
-                                        BudgetSafe.copy(alpha = 0.12f)
-                                    } else {
-                                        Color.Transparent
-                                    },
-                                    contentColor = if (isSelected) {
-                                        BudgetSafe
-                                    } else {
-                                        MaterialTheme.colorScheme.onSurface
-                                    }
-                                )
-                            ) {
-                                Text(
-                                    text = monthName,
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.action_cancel))
-            }
-        }
-    )
 }
 
 @Composable
@@ -565,8 +451,6 @@ private fun HistoryScreenPreview() {
             onSearchQueryChange = {},
             onStatusFilterSelected = {},
             onMonthFieldClick = {},
-            onMonthPickerDismiss = {},
-            onMonthSelected = { _, _ -> },
             onExpenseClick = {}
         )
     }

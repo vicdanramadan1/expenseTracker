@@ -19,8 +19,6 @@ fun HistoryRoute(
         onSearchQueryChange = viewModel::onSearchQueryChange,
         onStatusFilterSelected = viewModel::onStatusFilterSelected,
         onMonthFieldClick = viewModel::onMonthFieldClick,
-        onMonthPickerDismiss = viewModel::onMonthPickerDismiss,
-        onMonthSelected = viewModel::onMonthSelected,
         onExpenseClick = onExpenseClick,
         modifier = modifier
     )
